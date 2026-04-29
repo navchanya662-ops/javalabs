@@ -7,7 +7,7 @@ import java.util.Objects;
  */
 public class Clothes {
     private String name;
-    private String size;
+    private ClothesSize size;
     private String color;
     private String material;
     private double price;
@@ -22,7 +22,7 @@ public class Clothes {
      * @param price ціна елемента одягу
      * @throws IllegalArgumentException якщо текстове поле порожнє або ціна від'ємна
      */
-    public Clothes(String name, String size, String color, String material, double price) {
+    public Clothes(String name, ClothesSize size, String color, String material, double price) {
         setName(name);
         setSize(size);
         setColor(color);
@@ -55,7 +55,7 @@ public class Clothes {
      *
      * @return розмір елемента одягу
      */
-    public String getSize() {
+    public ClothesSize getSize() {
         return size;
     }
 
@@ -63,10 +63,10 @@ public class Clothes {
      * Встановлює розмір елемента одягу.
      *
      * @param size новий розмір
-     * @throws IllegalArgumentException якщо розмір порожній
+     * @throws IllegalArgumentException якщо розмір не вказаний
      */
-    public void setSize(String size) {
-        validateText(size, "Розмір");
+    public void setSize(ClothesSize size) {
+        validateSize(size);
         this.size = size;
     }
 
@@ -140,6 +140,18 @@ public class Clothes {
     private static void validateText(String value, String fieldName) {
         if (value == null || value.trim().isEmpty()) {
             throw new IllegalArgumentException(fieldName + " не може бути порожнім");
+        }
+    }
+
+    /**
+     * Перевіряє, що розмір одягу вказаний.
+     *
+     * @param size розмір для перевірки
+     * @throws IllegalArgumentException якщо розмір null
+     */
+    private static void validateSize(ClothesSize size) {
+        if (size == null) {
+            throw new IllegalArgumentException("Розмір не може бути порожнім");
         }
     }
 

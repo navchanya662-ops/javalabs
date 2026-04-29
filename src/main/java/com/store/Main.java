@@ -61,8 +61,8 @@ public class Main {
             System.out.print("Назва: ");
             String name = readNonBlankLine(scanner);
 
-            System.out.print("Розмір: ");
-            String size = readNonBlankLine(scanner);
+            System.out.print("Розмір (" + getAvailableSizes() + "): ");
+            ClothesSize size = readClothesSize(scanner);
 
             System.out.print("Колір: ");
             String color = readNonBlankLine(scanner);
@@ -115,6 +115,40 @@ public class Main {
             }
             System.out.print("Введіть номер пункту меню від 1 до 3: ");
         }
+    }
+
+    /**
+     * Зчитує розмір одягу з переліку ClothesSize.
+     *
+     * @param scanner об'єкт для зчитування введення
+     * @return коректний розмір одягу
+     */
+    private static ClothesSize readClothesSize(Scanner scanner) {
+        while (true) {
+            String input = scanner.nextLine().trim().toUpperCase();
+            try {
+                return ClothesSize.valueOf(input);
+            } catch (IllegalArgumentException ignored) {
+                System.out.print("Введіть один із доступних розмірів (" + getAvailableSizes() + "): ");
+            }
+        }
+    }
+
+    /**
+     * Повертає доступні розміри одягу у вигляді рядка.
+     *
+     * @return доступні розміри одягу
+     */
+    private static String getAvailableSizes() {
+        StringBuilder sizes = new StringBuilder();
+        ClothesSize[] values = ClothesSize.values();
+        for (int i = 0; i < values.length; i++) {
+            if (i > 0) {
+                sizes.append(", ");
+            }
+            sizes.append(values[i]);
+        }
+        return sizes.toString();
     }
 
     /**
