@@ -1,17 +1,73 @@
 package com.store;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-public class Main {
-    static void main() {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        IO.println(String.format("Hello and welcome!"));
+import java.util.Scanner;
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            IO.println("i = " + i);
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Введіть кількість елементів одягу: ");
+        int count = readPositiveInt(scanner);
+        Clothes[] clothes = new Clothes[count];
+
+        for (int i = 0; i < clothes.length; i++) {
+            System.out.println("\nЕлемент одягу #" + (i + 1));
+            System.out.print("Назва: ");
+            String name = readNonBlankLine(scanner);
+
+            System.out.print("Розмір: ");
+            String size = readNonBlankLine(scanner);
+
+            System.out.print("Колір: ");
+            String color = readNonBlankLine(scanner);
+
+            System.out.print("Ціна: ");
+            double price = readNonNegativeDouble(scanner);
+
+            clothes[i] = new Clothes(name, size, color, price);
+        }
+
+        System.out.println("\nСтворені елементи одягу:");
+        for (Clothes item : clothes) {
+            System.out.println(item);
+        }
+    }
+
+    private static int readPositiveInt(Scanner scanner) {
+        while (true) {
+            String input = scanner.nextLine().trim();
+            try {
+                int value = Integer.parseInt(input);
+                if (value > 0) {
+                    return value;
+                }
+            } catch (NumberFormatException ignored) {
+            }
+            System.out.print("Введіть додатне ціле число: ");
+        }
+    }
+
+    private static double readNonNegativeDouble(Scanner scanner) {
+        while (true) {
+            String input = scanner.nextLine().trim().replace(',', '.');
+            try {
+                double value = Double.parseDouble(input);
+                if (value >= 0) {
+                    return value;
+                }
+            } catch (NumberFormatException ignored) {
+            }
+            System.out.print("Введіть невід'ємне число: ");
+        }
+    }
+
+    private static String readNonBlankLine(Scanner scanner) {
+        while (true) {
+            String input = scanner.nextLine().trim();
+            if (!input.isEmpty()) {
+                return input;
+            }
+            System.out.print("Значення не може бути порожнім. Спробуйте ще раз: ");
         }
     }
 }
