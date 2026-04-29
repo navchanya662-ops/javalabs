@@ -29,7 +29,9 @@ public class Main {
             switch (choice) {
                 case 1 -> createClothes(scanner, clothes);
                 case 2 -> printClothes(clothes);
-                case 3 -> {
+                case 3 -> copyClothes(scanner, clothes);
+                case 4 -> printObjectCount();
+                case 5 -> {
                     System.out.println("Роботу програми завершено.");
                     return;
                 }
@@ -45,7 +47,9 @@ public class Main {
         System.out.println("\nМеню:");
         System.out.println("1. Створити новий об'єкт");
         System.out.println("2. Вивести всі об'єкти");
-        System.out.println("3. Завершити роботу");
+        System.out.println("3. Створити копію існуючого об'єкта");
+        System.out.println("4. Показати кількість створених об'єктів");
+        System.out.println("5. Завершити роботу");
         System.out.print("Оберіть пункт меню: ");
     }
 
@@ -98,7 +102,34 @@ public class Main {
     }
 
     /**
-     * Зчитує номер пункту меню та перевіряє, що він знаходиться в межах від 1 до 3.
+     * Створює копію існуючого елемента одягу та додає її до списку.
+     *
+     * @param scanner об'єкт для зчитування введення
+     * @param clothes список елементів одягу
+     */
+    private static void copyClothes(Scanner scanner, ArrayList<Clothes> clothes) {
+        if (clothes.isEmpty()) {
+            System.out.println("Немає об'єктів для копіювання.");
+            return;
+        }
+
+        printClothes(clothes);
+        System.out.print("Введіть номер об'єкта для копіювання: ");
+        int index = readObjectIndex(scanner, clothes.size());
+        Clothes copy = new Clothes(clothes.get(index));
+        clothes.add(copy);
+        System.out.println("Копію об'єкта успішно створено.");
+    }
+
+    /**
+     * Виводить кількість створених об'єктів Clothes.
+     */
+    private static void printObjectCount() {
+        System.out.println("Кількість створених об'єктів Clothes: " + Clothes.getObjectCount());
+    }
+
+    /**
+     * Зчитує номер пункту меню та перевіряє, що він знаходиться в межах від 1 до 5.
      *
      * @param scanner об'єкт для зчитування введення
      * @return коректний номер пункту меню
@@ -108,12 +139,33 @@ public class Main {
             String input = scanner.nextLine().trim();
             try {
                 int value = Integer.parseInt(input);
-                if (value >= 1 && value <= 3) {
+                if (value >= 1 && value <= 5) {
                     return value;
                 }
             } catch (NumberFormatException ignored) {
             }
-            System.out.print("Введіть номер пункту меню від 1 до 3: ");
+            System.out.print("Введіть номер пункту меню від 1 до 5: ");
+        }
+    }
+
+    /**
+     * Зчитує індекс існуючого об'єкта зі списку.
+     *
+     * @param scanner об'єкт для зчитування введення
+     * @param size кількість об'єктів у списку
+     * @return індекс об'єкта у списку
+     */
+    private static int readObjectIndex(Scanner scanner, int size) {
+        while (true) {
+            String input = scanner.nextLine().trim();
+            try {
+                int number = Integer.parseInt(input);
+                if (number >= 1 && number <= size) {
+                    return number - 1;
+                }
+            } catch (NumberFormatException ignored) {
+            }
+            System.out.print("Введіть номер об'єкта від 1 до " + size + ": ");
         }
     }
 

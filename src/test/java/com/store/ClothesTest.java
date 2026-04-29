@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ClothesTest {
@@ -33,5 +34,14 @@ class ClothesTest {
     @Test
     void shouldThrowExceptionWhenCopiedObjectIsNull() {
         assertThrows(IllegalArgumentException.class, () -> new Clothes(null));
+    }
+
+    @Test
+    void shouldIncreaseObjectCountWhenClothesCreated() {
+        int before = Clothes.getObjectCount();
+
+        new Clothes("Футболка", ClothesSize.M, "Білий", "Бавовна", 499.99);
+
+        assertTrue(Clothes.getObjectCount() > before);
     }
 }

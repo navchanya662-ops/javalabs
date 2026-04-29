@@ -6,6 +6,8 @@ import java.util.Objects;
  * Описує один елемент одягу з назвою, розміром, кольором, матеріалом і ціною.
  */
 public class Clothes {
+    private static int objectCount;
+
     private String name;
     private ClothesSize size;
     private String color;
@@ -28,6 +30,7 @@ public class Clothes {
         setColor(color);
         setMaterial(material);
         setPrice(price);
+        objectCount++;
     }
 
     /**
@@ -44,6 +47,15 @@ public class Clothes {
                 requireNonNullClothes(other).material,
                 requireNonNullClothes(other).price
         );
+    }
+
+    /**
+     * Повертає кількість створених об'єктів Clothes.
+     *
+     * @return кількість створених об'єктів Clothes
+     */
+    public static int getObjectCount() {
+        return objectCount;
     }
 
     /**
