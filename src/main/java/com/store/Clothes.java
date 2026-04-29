@@ -10,11 +10,11 @@ public class Clothes {
     private double price;
 
     public Clothes(String name, String size, String color, String material, double price) {
-        this.name = name;
-        this.size = size;
-        this.color = color;
-        this.material = material;
-        this.price = price;
+        setName(name);
+        setSize(size);
+        setColor(color);
+        setMaterial(material);
+        setPrice(price);
     }
 
     public String getName() {
@@ -22,6 +22,7 @@ public class Clothes {
     }
 
     public void setName(String name) {
+        validateText(name, "Назва");
         this.name = name;
     }
 
@@ -30,6 +31,7 @@ public class Clothes {
     }
 
     public void setSize(String size) {
+        validateText(size, "Розмір");
         this.size = size;
     }
 
@@ -38,6 +40,7 @@ public class Clothes {
     }
 
     public void setColor(String color) {
+        validateText(color, "Колір");
         this.color = color;
     }
 
@@ -46,6 +49,7 @@ public class Clothes {
     }
 
     public void setMaterial(String material) {
+        validateText(material, "Матеріал");
         this.material = material;
     }
 
@@ -54,7 +58,20 @@ public class Clothes {
     }
 
     public void setPrice(double price) {
+        validatePrice(price);
         this.price = price;
+    }
+
+    private static void validateText(String value, String fieldName) {
+        if (value == null || value.trim().isEmpty()) {
+            throw new IllegalArgumentException(fieldName + " не може бути порожнім");
+        }
+    }
+
+    private static void validatePrice(double price) {
+        if (price < 0) {
+            throw new IllegalArgumentException("Ціна не може бути від'ємною");
+        }
     }
 
     @Override
