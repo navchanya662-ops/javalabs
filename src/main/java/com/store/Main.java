@@ -3,7 +3,21 @@ package com.store;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Драйвер програми для створення та перегляду елементів одягу через консольне меню.
+ */
 public class Main {
+    /**
+     * Забороняє створення об'єктів службового класу Main.
+     */
+    private Main() {
+    }
+
+    /**
+     * Запускає консольне меню програми.
+     *
+     * @param args аргументи командного рядка
+     */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         ArrayList<Clothes> clothes = new ArrayList<>();
@@ -24,6 +38,9 @@ public class Main {
         }
     }
 
+    /**
+     * Виводить головне меню програми.
+     */
     private static void printMenu() {
         System.out.println("\nМеню:");
         System.out.println("1. Створити новий об'єкт");
@@ -32,6 +49,12 @@ public class Main {
         System.out.print("Оберіть пункт меню: ");
     }
 
+    /**
+     * Зчитує дані з клавіатури, створює об'єкт Clothes і додає його до списку.
+     *
+     * @param scanner об'єкт для зчитування введення
+     * @param clothes список елементів одягу
+     */
     private static void createClothes(Scanner scanner, ArrayList<Clothes> clothes) {
         try {
             System.out.println("\nНовий елемент одягу");
@@ -57,6 +80,11 @@ public class Main {
         }
     }
 
+    /**
+     * Виводить усі створені елементи одягу.
+     *
+     * @param clothes список елементів одягу
+     */
     private static void printClothes(ArrayList<Clothes> clothes) {
         if (clothes.isEmpty()) {
             System.out.println("Список елементів одягу порожній.");
@@ -69,6 +97,12 @@ public class Main {
         }
     }
 
+    /**
+     * Зчитує номер пункту меню та перевіряє, що він знаходиться в межах від 1 до 3.
+     *
+     * @param scanner об'єкт для зчитування введення
+     * @return коректний номер пункту меню
+     */
     private static int readMenuChoice(Scanner scanner) {
         while (true) {
             String input = scanner.nextLine().trim();
@@ -83,6 +117,12 @@ public class Main {
         }
     }
 
+    /**
+     * Зчитує невід'ємне дробове число.
+     *
+     * @param scanner об'єкт для зчитування введення
+     * @return невід'ємне число
+     */
     private static double readNonNegativeDouble(Scanner scanner) {
         while (true) {
             String input = scanner.nextLine().trim().replace(',', '.');
@@ -97,6 +137,12 @@ public class Main {
         }
     }
 
+    /**
+     * Зчитує непорожній рядок.
+     *
+     * @param scanner об'єкт для зчитування введення
+     * @return непорожній рядок без зайвих пробілів на початку та в кінці
+     */
     private static String readNonBlankLine(Scanner scanner) {
         while (true) {
             String input = scanner.nextLine().trim();
