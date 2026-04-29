@@ -6,8 +6,10 @@ import java.util.Objects;
  * Описує один елемент одягу з назвою, розміром, кольором, матеріалом і ціною.
  */
 public class Clothes {
+    private static int objectCount;
+
     private String name;
-    private String size;
+    private ClothesSize size;
     private String color;
     private String material;
     private double price;
@@ -22,12 +24,38 @@ public class Clothes {
      * @param price ціна елемента одягу
      * @throws IllegalArgumentException якщо текстове поле порожнє або ціна від'ємна
      */
-    public Clothes(String name, String size, String color, String material, double price) {
+    public Clothes(String name, ClothesSize size, String color, String material, double price) {
         setName(name);
         setSize(size);
         setColor(color);
         setMaterial(material);
         setPrice(price);
+        objectCount++;
+    }
+
+    /**
+     * Створює копію іншого елемента одягу.
+     *
+     * @param other елемент одягу, який потрібно скопіювати
+     * @throws IllegalArgumentException якщо об'єкт для копіювання null
+     */
+    public Clothes(Clothes other) {
+        this(
+                requireNonNullClothes(other).name,
+                requireNonNullClothes(other).size,
+                requireNonNullClothes(other).color,
+                requireNonNullClothes(other).material,
+                requireNonNullClothes(other).price
+        );
+    }
+
+    /**
+     * Повертає кількість створених об'єктів Clothes.
+     *
+     * @return кількість створених об'єктів Clothes
+     */
+    public static int getObjectCount() {
+        return objectCount;
     }
 
     /**
@@ -55,7 +83,7 @@ public class Clothes {
      *
      * @return розмір елемента одягу
      */
-    public String getSize() {
+    public ClothesSize getSize() {
         return size;
     }
 
@@ -63,10 +91,10 @@ public class Clothes {
      * Встановлює розмір елемента одягу.
      *
      * @param size новий розмір
-     * @throws IllegalArgumentException якщо розмір порожній
+     * @throws IllegalArgumentException якщо розмір не вказаний
      */
-    public void setSize(String size) {
-        validateText(size, "Розмір");
+    public void setSize(ClothesSize size) {
+        validateSize(size);
         this.size = size;
     }
 
@@ -144,6 +172,18 @@ public class Clothes {
     }
 
     /**
+     * Перевіряє, що розмір одягу вказаний.
+     *
+     * @param size розмір для перевірки
+     * @throws IllegalArgumentException якщо розмір null
+     */
+    private static void validateSize(ClothesSize size) {
+        if (size == null) {
+            throw new IllegalArgumentException("Розмір не може бути порожнім");
+        }
+    }
+
+    /**
      * Перевіряє, що ціна не є від'ємною.
      *
      * @param price ціна для перевірки
@@ -153,6 +193,20 @@ public class Clothes {
         if (price < 0) {
             throw new IllegalArgumentException("Ціна не може бути від'ємною");
         }
+    }
+
+    /**
+     * Перевіряє, що об'єкт для копіювання існує.
+     *
+     * @param clothes об'єкт для перевірки
+     * @return переданий об'єкт, якщо він не null
+     * @throws IllegalArgumentException якщо об'єкт null
+     */
+    private static Clothes requireNonNullClothes(Clothes clothes) {
+        if (clothes == null) {
+            throw new IllegalArgumentException("Об'єкт для копіювання не може бути null");
+        }
+        return clothes;
     }
 
     /**
