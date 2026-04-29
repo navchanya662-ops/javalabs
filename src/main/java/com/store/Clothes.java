@@ -31,6 +31,22 @@ public class Clothes {
     }
 
     /**
+     * Створює копію іншого елемента одягу.
+     *
+     * @param other елемент одягу, який потрібно скопіювати
+     * @throws IllegalArgumentException якщо об'єкт для копіювання null
+     */
+    public Clothes(Clothes other) {
+        this(
+                requireNonNullClothes(other).name,
+                requireNonNullClothes(other).size,
+                requireNonNullClothes(other).color,
+                requireNonNullClothes(other).material,
+                requireNonNullClothes(other).price
+        );
+    }
+
+    /**
      * Повертає назву елемента одягу.
      *
      * @return назва елемента одягу
@@ -165,6 +181,20 @@ public class Clothes {
         if (price < 0) {
             throw new IllegalArgumentException("Ціна не може бути від'ємною");
         }
+    }
+
+    /**
+     * Перевіряє, що об'єкт для копіювання існує.
+     *
+     * @param clothes об'єкт для перевірки
+     * @return переданий об'єкт, якщо він не null
+     * @throws IllegalArgumentException якщо об'єкт null
+     */
+    private static Clothes requireNonNullClothes(Clothes clothes) {
+        if (clothes == null) {
+            throw new IllegalArgumentException("Об'єкт для копіювання не може бути null");
+        }
+        return clothes;
     }
 
     /**
