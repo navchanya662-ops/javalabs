@@ -1,17 +1,63 @@
 package com.store;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Драйвер програми для створення та перегляду елементів одягу через консольне меню.
+ */
 public class Main {
+    /**
+     * Забороняє створення об'єктів службового класу Main.
+     */
+    private Main() {
+    }
+
+    /**
+     * Запускає консольне меню програми.
+     *
+     * @param args аргументи командного рядка
+     */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        ArrayList<Clothes> clothes = new ArrayList<>();
 
-        System.out.print("Введіть кількість елементів одягу: ");
-        int count = readPositiveInt(scanner);
-        Clothes[] clothes = new Clothes[count];
+        while (true) {
+            printMenu();
+            int choice = readMenuChoice(scanner);
 
-        for (int i = 0; i < clothes.length; i++) {
-            System.out.println("\nЕлемент одягу #" + (i + 1));
+            switch (choice) {
+                case 1 -> createClothes(scanner, clothes);
+                case 2 -> printClothes(clothes);
+                case 3 -> {
+                    System.out.println("Роботу програми завершено.");
+                    return;
+                }
+                default -> System.out.println("Оберіть пункт меню від 1 до 3.");
+            }
+        }
+    }
+
+    /**
+     * Виводить головне меню програми.
+     */
+    private static void printMenu() {
+        System.out.println("\nМеню:");
+        System.out.println("1. Створити новий об'єкт");
+        System.out.println("2. Вивести всі об'єкти");
+        System.out.println("3. Завершити роботу");
+        System.out.print("Оберіть пункт меню: ");
+    }
+
+    /**
+     * Зчитує дані з клавіатури, створює об'єкт Clothes і додає його до списку.
+     *
+     * @param scanner об'єкт для зчитування введення
+     * @param clothes список елементів одягу
+     */
+    private static void createClothes(Scanner scanner, ArrayList<Clothes> clothes) {
+        try {
+            System.out.println("\nНовий елемент одягу");
             System.out.print("Назва: ");
             String name = readNonBlankLine(scanner);
 
@@ -21,32 +67,62 @@ public class Main {
             System.out.print("Колір: ");
             String color = readNonBlankLine(scanner);
 
+            System.out.print("Матеріал: ");
+            String material = readNonBlankLine(scanner);
+
             System.out.print("Ціна: ");
             double price = readNonNegativeDouble(scanner);
 
-            clothes[i] = new Clothes(name, size, color, price);
-        }
-
-        System.out.println("\nСтворені елементи одягу:");
-        for (Clothes item : clothes) {
-            System.out.println(item);
+            clothes.add(new Clothes(name, size, color, material, price));
+            System.out.println("Об'єкт успішно створено.");
+        } catch (IllegalArgumentException exception) {
+            System.out.println("Помилка створення об'єкта: " + exception.getMessage());
         }
     }
 
-    private static int readPositiveInt(Scanner scanner) {
+    /**
+     * Виводить усі створені елементи одягу.
+     *
+     * @param clothes список елементів одягу
+     */
+    private static void printClothes(ArrayList<Clothes> clothes) {
+        if (clothes.isEmpty()) {
+            System.out.println("Список елементів одягу порожній.");
+            return;
+        }
+
+        System.out.println("\nСтворені елементи одягу:");
+        for (int i = 0; i < clothes.size(); i++) {
+            System.out.println((i + 1) + ". " + clothes.get(i));
+        }
+    }
+
+    /**
+     * Зчитує номер пункту меню та перевіряє, що він знаходиться в межах від 1 до 3.
+     *
+     * @param scanner об'єкт для зчитування введення
+     * @return коректний номер пункту меню
+     */
+    private static int readMenuChoice(Scanner scanner) {
         while (true) {
             String input = scanner.nextLine().trim();
             try {
                 int value = Integer.parseInt(input);
-                if (value > 0) {
+                if (value >= 1 && value <= 3) {
                     return value;
                 }
             } catch (NumberFormatException ignored) {
             }
-            System.out.print("Введіть додатне ціле число: ");
+            System.out.print("Введіть номер пункту меню від 1 до 3: ");
         }
     }
 
+    /**
+     * Зчитує невід'ємне дробове число.
+     *
+     * @param scanner об'єкт для зчитування введення
+     * @return невід'ємне число
+     */
     private static double readNonNegativeDouble(Scanner scanner) {
         while (true) {
             String input = scanner.nextLine().trim().replace(',', '.');
@@ -61,6 +137,12 @@ public class Main {
         }
     }
 
+    /**
+     * Зчитує непорожній рядок.
+     *
+     * @param scanner об'єкт для зчитування введення
+     * @return непорожній рядок без зайвих пробілів на початку та в кінці
+     */
     private static String readNonBlankLine(Scanner scanner) {
         while (true) {
             String input = scanner.nextLine().trim();

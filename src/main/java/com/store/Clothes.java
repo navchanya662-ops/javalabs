@@ -2,61 +2,181 @@ package com.store;
 
 import java.util.Objects;
 
+/**
+ * Описує один елемент одягу з назвою, розміром, кольором, матеріалом і ціною.
+ */
 public class Clothes {
     private String name;
     private String size;
     private String color;
+    private String material;
     private double price;
 
-    public Clothes(String name, String size, String color, double price) {
-        this.name = name;
-        this.size = size;
-        this.color = color;
-        this.price = price;
+    /**
+     * Створює новий елемент одягу.
+     *
+     * @param name назва елемента одягу
+     * @param size розмір елемента одягу
+     * @param color колір елемента одягу
+     * @param material матеріал елемента одягу
+     * @param price ціна елемента одягу
+     * @throws IllegalArgumentException якщо текстове поле порожнє або ціна від'ємна
+     */
+    public Clothes(String name, String size, String color, String material, double price) {
+        setName(name);
+        setSize(size);
+        setColor(color);
+        setMaterial(material);
+        setPrice(price);
     }
 
+    /**
+     * Повертає назву елемента одягу.
+     *
+     * @return назва елемента одягу
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Встановлює назву елемента одягу.
+     *
+     * @param name нова назва
+     * @throws IllegalArgumentException якщо назва порожня
+     */
     public void setName(String name) {
+        validateText(name, "Назва");
         this.name = name;
     }
 
+    /**
+     * Повертає розмір елемента одягу.
+     *
+     * @return розмір елемента одягу
+     */
     public String getSize() {
         return size;
     }
 
+    /**
+     * Встановлює розмір елемента одягу.
+     *
+     * @param size новий розмір
+     * @throws IllegalArgumentException якщо розмір порожній
+     */
     public void setSize(String size) {
+        validateText(size, "Розмір");
         this.size = size;
     }
 
+    /**
+     * Повертає колір елемента одягу.
+     *
+     * @return колір елемента одягу
+     */
     public String getColor() {
         return color;
     }
 
+    /**
+     * Встановлює колір елемента одягу.
+     *
+     * @param color новий колір
+     * @throws IllegalArgumentException якщо колір порожній
+     */
     public void setColor(String color) {
+        validateText(color, "Колір");
         this.color = color;
     }
 
+    /**
+     * Повертає матеріал елемента одягу.
+     *
+     * @return матеріал елемента одягу
+     */
+    public String getMaterial() {
+        return material;
+    }
+
+    /**
+     * Встановлює матеріал елемента одягу.
+     *
+     * @param material новий матеріал
+     * @throws IllegalArgumentException якщо матеріал порожній
+     */
+    public void setMaterial(String material) {
+        validateText(material, "Матеріал");
+        this.material = material;
+    }
+
+    /**
+     * Повертає ціну елемента одягу.
+     *
+     * @return ціна елемента одягу
+     */
     public double getPrice() {
         return price;
     }
 
+    /**
+     * Встановлює ціну елемента одягу.
+     *
+     * @param price нова ціна
+     * @throws IllegalArgumentException якщо ціна від'ємна
+     */
     public void setPrice(double price) {
+        validatePrice(price);
         this.price = price;
     }
 
+    /**
+     * Перевіряє, що текстове значення не є порожнім.
+     *
+     * @param value значення для перевірки
+     * @param fieldName назва поля для повідомлення про помилку
+     * @throws IllegalArgumentException якщо значення null або порожнє
+     */
+    private static void validateText(String value, String fieldName) {
+        if (value == null || value.trim().isEmpty()) {
+            throw new IllegalArgumentException(fieldName + " не може бути порожнім");
+        }
+    }
+
+    /**
+     * Перевіряє, що ціна не є від'ємною.
+     *
+     * @param price ціна для перевірки
+     * @throws IllegalArgumentException якщо ціна від'ємна
+     */
+    private static void validatePrice(double price) {
+        if (price < 0) {
+            throw new IllegalArgumentException("Ціна не може бути від'ємною");
+        }
+    }
+
+    /**
+     * Повертає текстовий опис елемента одягу.
+     *
+     * @return опис елемента одягу
+     */
     @Override
     public String toString() {
         return "Одяг{"
                 + "назва='" + name + '\''
                 + ", розмір='" + size + '\''
                 + ", колір='" + color + '\''
+                + ", матеріал='" + material + '\''
                 + ", ціна=" + price
                 + '}';
     }
 
+    /**
+     * Порівнює елементи одягу за значеннями всіх полів.
+     *
+     * @param object об'єкт для порівняння
+     * @return true, якщо всі поля об'єктів збігаються
+     */
     @Override
     public boolean equals(Object object) {
         if (this == object) {
@@ -68,11 +188,17 @@ public class Clothes {
         return Double.compare(price, clothes.price) == 0
                 && Objects.equals(name, clothes.name)
                 && Objects.equals(size, clothes.size)
-                && Objects.equals(color, clothes.color);
+                && Objects.equals(color, clothes.color)
+                && Objects.equals(material, clothes.material);
     }
 
+    /**
+     * Повертає хеш-код на основі всіх полів елемента одягу.
+     *
+     * @return хеш-код елемента одягу
+     */
     @Override
     public int hashCode() {
-        return Objects.hash(name, size, color, price);
+        return Objects.hash(name, size, color, material, price);
     }
 }
