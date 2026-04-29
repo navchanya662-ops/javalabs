@@ -21,10 +21,13 @@ public class Main {
             System.out.print("Колір: ");
             String color = readNonBlankLine(scanner);
 
+            System.out.print("Матеріал: ");
+            String material = readNonBlankLine(scanner);
+
             System.out.print("Ціна: ");
             double price = readNonNegativeDouble(scanner);
 
-            clothes[i] = new Clothes(name, size, color, price);
+            clothes[i] = new Clothes(name, size, color, material, price);
         }
 
         System.out.println("\nСтворені елементи одягу:");

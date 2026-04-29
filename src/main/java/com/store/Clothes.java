@@ -6,12 +6,14 @@ public class Clothes {
     private String name;
     private String size;
     private String color;
+    private String material;
     private double price;
 
-    public Clothes(String name, String size, String color, double price) {
+    public Clothes(String name, String size, String color, String material, double price) {
         this.name = name;
         this.size = size;
         this.color = color;
+        this.material = material;
         this.price = price;
     }
 
@@ -39,6 +41,14 @@ public class Clothes {
         this.color = color;
     }
 
+    public String getMaterial() {
+        return material;
+    }
+
+    public void setMaterial(String material) {
+        this.material = material;
+    }
+
     public double getPrice() {
         return price;
     }
@@ -53,6 +63,7 @@ public class Clothes {
                 + "назва='" + name + '\''
                 + ", розмір='" + size + '\''
                 + ", колір='" + color + '\''
+                + ", матеріал='" + material + '\''
                 + ", ціна=" + price
                 + '}';
     }
@@ -68,11 +79,12 @@ public class Clothes {
         return Double.compare(price, clothes.price) == 0
                 && Objects.equals(name, clothes.name)
                 && Objects.equals(size, clothes.size)
-                && Objects.equals(color, clothes.color);
+                && Objects.equals(color, clothes.color)
+                && Objects.equals(material, clothes.material);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, size, color, price);
+        return Objects.hash(name, size, color, material, price);
     }
 }
