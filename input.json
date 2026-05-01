@@ -56,5 +56,16 @@
     "hasHood": false,
     "lengthType": "міді",
     "formal": true
+  },
+  {
+    "type": "PANTS",
+    "name": "бріджи",
+    "size": "XS",
+    "color": "білий",
+    "material": "бавовна",
+    "price": 2.999,
+    "hasPockets": true,
+    "hasHood": false,
+    "formal": false
   }
 ]
