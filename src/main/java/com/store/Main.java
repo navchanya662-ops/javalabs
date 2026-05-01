@@ -1,5 +1,6 @@
 package com.store;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -19,16 +20,16 @@ public class Main {
      */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        Wardrobe wardrobe = new Wardrobe();
+        ArrayList<Clothes> clothes = new ArrayList<>();
 
         while (true) {
             printMenu();
             int choice = readMenuChoice(scanner);
 
             switch (choice) {
-                case 1 -> createClothes(scanner, wardrobe);
-                case 2 -> printClothes(wardrobe);
-                case 3 -> copyClothes(scanner, wardrobe);
+                case 1 -> createClothes(scanner, clothes);
+                case 2 -> printClothes(clothes);
+                case 3 -> copyClothes(scanner, clothes);
                 case 4 -> {
                     System.out.println("Роботу програми завершено.");
                     return;
@@ -54,9 +55,9 @@ public class Main {
      * Зчитує дані з клавіатури, створює об'єкт Clothes і додає його до списку.
      *
      * @param scanner об'єкт для зчитування введення
-     * @param wardrobe шафа для зберігання елементів одягу
+     * @param clothes список елементів одягу
      */
-    private static void createClothes(Scanner scanner, Wardrobe wardrobe) {
+    private static void createClothes(Scanner scanner, ArrayList<Clothes> clothes) {
         try {
             System.out.println("\nНовий елемент одягу");
             System.out.print("Назва: ");
@@ -74,7 +75,7 @@ public class Main {
             System.out.print("Ціна: ");
             double price = readNonNegativeDouble(scanner);
 
-            wardrobe.addClothes(new Clothes(name, size, color, material, price));
+            clothes.add(new Clothes(name, size, color, material, price));
             System.out.println("Об'єкт успішно створено.");
         } catch (IllegalArgumentException exception) {
             System.out.println("Помилка створення об'єкта: " + exception.getMessage());
@@ -84,17 +85,17 @@ public class Main {
     /**
      * Виводить усі створені елементи одягу.
      *
-     * @param wardrobe шафа з елементами одягу
+     * @param clothes список елементів одягу
      */
-    private static void printClothes(Wardrobe wardrobe) {
-        if (wardrobe.isEmpty()) {
+    private static void printClothes(ArrayList<Clothes> clothes) {
+        if (clothes.isEmpty()) {
             System.out.println("Список елементів одягу порожній.");
             return;
         }
 
         System.out.println("\nСтворені елементи одягу:");
-        for (int i = 0; i < wardrobe.getClothesCount(); i++) {
-            System.out.println((i + 1) + ". " + wardrobe.getClothes(i));
+        for (int i = 0; i < clothes.size(); i++) {
+            System.out.println((i + 1) + ". " + clothes.get(i));
         }
     }
 
@@ -102,19 +103,19 @@ public class Main {
      * Створює копію існуючого елемента одягу та додає її до списку.
      *
      * @param scanner об'єкт для зчитування введення
-     * @param wardrobe шафа з елементами одягу
+     * @param clothes список елементів одягу
      */
-    private static void copyClothes(Scanner scanner, Wardrobe wardrobe) {
-        if (wardrobe.isEmpty()) {
+    private static void copyClothes(Scanner scanner, ArrayList<Clothes> clothes) {
+        if (clothes.isEmpty()) {
             System.out.println("Немає об'єктів для копіювання.");
             return;
         }
 
-        printClothes(wardrobe);
+        printClothes(clothes);
         System.out.print("Введіть номер об'єкта для копіювання: ");
-        int index = readObjectIndex(scanner, wardrobe.getClothesCount());
-        Clothes copy = new Clothes(wardrobe.getClothes(index));
-        wardrobe.addClothes(copy);
+        int index = readObjectIndex(scanner, clothes.size());
+        Clothes copy = new Clothes(clothes.get(index));
+        clothes.add(copy);
         System.out.println("Копію об'єкта успішно створено.");
     }
 
