@@ -27,12 +27,9 @@ public class Main {
             int choice = readMenuChoice(scanner);
 
             switch (choice) {
-                case 1 -> createClothes(scanner, clothes);
-                case 2 -> createPants(scanner, clothes);
-                case 3 -> createShirts(scanner, clothes);
-                case 4 -> printClothes(clothes);
-                case 5 -> copyClothes(scanner, clothes);
-                case 6 -> {
+                case 1 -> createObject(scanner, clothes);
+                case 2 -> printClothes(clothes);
+                case 3 -> {
                     System.out.println("Роботу програми завершено.");
                     return;
                 }
@@ -46,13 +43,45 @@ public class Main {
      */
     private static void printMenu() {
         System.out.println("\nМеню:");
-        System.out.println("1. Створити звичайний одяг");
-        System.out.println("2. Створити штани");
-        System.out.println("3. Створити сорочку");
-        System.out.println("4. Вивести всі об'єкти");
-        System.out.println("5. Створити копію існуючого об'єкта");
-        System.out.println("6. Завершити роботу");
+        System.out.println("1. Створити новий об'єкт");
+        System.out.println("2. Вивести інформацію про всі об'єкти");
+        System.out.println("3. Завершити роботу програми");
         System.out.print("Оберіть пункт меню: ");
+    }
+
+    /**
+     * Виводить підменю створення об'єктів.
+     */
+    private static void printCreateObjectMenu() {
+        System.out.println("\nОберіть тип нового об'єкта:");
+        System.out.println("1. Звичайний одяг");
+        System.out.println("2. Штани");
+        System.out.println("3. Сорочка");
+        System.out.println("4. Куртка");
+        System.out.println("5. Сукня");
+        System.out.println("0. Повернутися до головного меню");
+        System.out.print("Ваш вибір: ");
+    }
+
+    /**
+     * Обробляє підменю створення нового об'єкта.
+     *
+     * @param scanner об'єкт для зчитування введення
+     * @param clothes список елементів одягу
+     */
+    private static void createObject(Scanner scanner, ArrayList<Clothes> clothes) {
+        printCreateObjectMenu();
+        int choice = readCreateObjectChoice(scanner);
+
+        switch (choice) {
+            case 0 -> System.out.println("Повернення до головного меню.");
+            case 1 -> createClothes(scanner, clothes);
+            case 2 -> createPants(scanner, clothes);
+            case 3 -> createShirts(scanner, clothes);
+            case 4 -> createJackets(scanner, clothes);
+            case 5 -> createDresses(scanner, clothes);
+            default -> System.out.println("Оберіть пункт підменю від 0 до 5.");
+        }
     }
 
     /**
@@ -155,6 +184,80 @@ public class Main {
     }
 
     /**
+     * Зчитує дані з клавіатури, створює об'єкт Jackets і додає його до списку базового типу.
+     *
+     * @param scanner об'єкт для зчитування введення
+     * @param clothes список елементів одягу
+     */
+    private static void createJackets(Scanner scanner, ArrayList<Clothes> clothes) {
+        try {
+            System.out.println("\nНова куртка");
+            System.out.print("Назва: ");
+            String name = readNonBlankLine(scanner);
+
+            System.out.print("Розмір (" + getAvailableSizes() + "): ");
+            ClothesSize size = readClothesSize(scanner);
+
+            System.out.print("Колір: ");
+            String color = readNonBlankLine(scanner);
+
+            System.out.print("Матеріал: ");
+            String material = readNonBlankLine(scanner);
+
+            System.out.print("Ціна: ");
+            double price = readNonNegativeDouble(scanner);
+
+            System.out.print("Є капюшон (так/ні): ");
+            boolean hasHood = readBooleanAnswer(scanner);
+
+            System.out.print("Тип утеплення: ");
+            String insulationType = readNonBlankLine(scanner);
+
+            clothes.add(new Jackets(name, size, color, material, price, hasHood, insulationType));
+            System.out.println("Куртку успішно створено.");
+        } catch (IllegalArgumentException exception) {
+            System.out.println("Помилка створення куртки: " + exception.getMessage());
+        }
+    }
+
+    /**
+     * Зчитує дані з клавіатури, створює об'єкт Dresses і додає його до списку базового типу.
+     *
+     * @param scanner об'єкт для зчитування введення
+     * @param clothes список елементів одягу
+     */
+    private static void createDresses(Scanner scanner, ArrayList<Clothes> clothes) {
+        try {
+            System.out.println("\nНова сукня");
+            System.out.print("Назва: ");
+            String name = readNonBlankLine(scanner);
+
+            System.out.print("Розмір (" + getAvailableSizes() + "): ");
+            ClothesSize size = readClothesSize(scanner);
+
+            System.out.print("Колір: ");
+            String color = readNonBlankLine(scanner);
+
+            System.out.print("Матеріал: ");
+            String material = readNonBlankLine(scanner);
+
+            System.out.print("Ціна: ");
+            double price = readNonNegativeDouble(scanner);
+
+            System.out.print("Тип довжини: ");
+            String lengthType = readNonBlankLine(scanner);
+
+            System.out.print("Офіційна (так/ні): ");
+            boolean isFormal = readBooleanAnswer(scanner);
+
+            clothes.add(new Dresses(name, size, color, material, price, lengthType, isFormal));
+            System.out.println("Сукню успішно створено.");
+        } catch (IllegalArgumentException exception) {
+            System.out.println("Помилка створення сукні: " + exception.getMessage());
+        }
+    }
+
+    /**
      * Виводить усі створені елементи одягу.
      *
      * @param clothes список елементів одягу
@@ -194,7 +297,7 @@ public class Main {
     }
 
     /**
-     * Зчитує номер пункту меню та перевіряє, що він знаходиться в межах від 1 до 6.
+     * Зчитує номер пункту меню та перевіряє, що він знаходиться в межах від 1 до 3.
      *
      * @param scanner об'єкт для зчитування введення
      * @return коректний номер пункту меню
@@ -204,12 +307,32 @@ public class Main {
             String input = scanner.nextLine().trim();
             try {
                 int value = Integer.parseInt(input);
-                if (value >= 1 && value <= 6) {
+                if (value >= 1 && value <= 3) {
                     return value;
                 }
             } catch (NumberFormatException ignored) {
             }
-            System.out.print("Введіть номер пункту меню від 1 до 6: ");
+            System.out.print("Введіть номер пункту меню від 1 до 3: ");
+        }
+    }
+
+    /**
+     * Зчитує номер пункту підменю створення об'єктів.
+     *
+     * @param scanner об'єкт для зчитування введення
+     * @return коректний номер пункту підменю
+     */
+    private static int readCreateObjectChoice(Scanner scanner) {
+        while (true) {
+            String input = scanner.nextLine().trim();
+            try {
+                int value = Integer.parseInt(input);
+                if (value >= 0 && value <= 5) {
+                    return value;
+                }
+            } catch (NumberFormatException ignored) {
+            }
+            System.out.print("Введіть номер пункту підменю від 0 до 5: ");
         }
     }
 
