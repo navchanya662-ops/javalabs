@@ -29,8 +29,7 @@ public class Main {
                 case 1 -> createClothes(scanner, wardrobe);
                 case 2 -> printClothes(wardrobe);
                 case 3 -> copyClothes(scanner, wardrobe);
-                case 4 -> printObjectCount();
-                case 5 -> {
+                case 4 -> {
                     System.out.println("Роботу програми завершено.");
                     return;
                 }
@@ -47,8 +46,7 @@ public class Main {
         System.out.println("1. Створити новий об'єкт");
         System.out.println("2. Вивести всі об'єкти");
         System.out.println("3. Створити копію існуючого об'єкта");
-        System.out.println("4. Показати кількість створених об'єктів");
-        System.out.println("5. Завершити роботу");
+        System.out.println("4. Завершити роботу");
         System.out.print("Оберіть пункт меню: ");
     }
 
@@ -121,14 +119,7 @@ public class Main {
     }
 
     /**
-     * Виводить кількість створених об'єктів Clothes.
-     */
-    private static void printObjectCount() {
-        System.out.println("Кількість створених об'єктів Clothes: " + Clothes.getObjectCount());
-    }
-
-    /**
-     * Зчитує номер пункту меню та перевіряє, що він знаходиться в межах від 1 до 5.
+     * Зчитує номер пункту меню та перевіряє, що він знаходиться в межах від 1 до 4.
      *
      * @param scanner об'єкт для зчитування введення
      * @return коректний номер пункту меню
@@ -138,12 +129,12 @@ public class Main {
             String input = scanner.nextLine().trim();
             try {
                 int value = Integer.parseInt(input);
-                if (value >= 1 && value <= 5) {
+                if (value >= 1 && value <= 4) {
                     return value;
                 }
             } catch (NumberFormatException ignored) {
             }
-            System.out.print("Введіть номер пункту меню від 1 до 5: ");
+            System.out.print("Введіть номер пункту меню від 1 до 4: ");
         }
     }
 
