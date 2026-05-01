@@ -2,10 +2,12 @@ package com.store;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ClothesTest {
     @Test
@@ -37,11 +39,49 @@ class ClothesTest {
     }
 
     @Test
-    void shouldIncreaseObjectCountWhenClothesCreated() {
-        int before = Clothes.getObjectCount();
+    void shouldCreatePantsAsClothes() {
+        Clothes pants = new Pants("Джинси", ClothesSize.L, "Синій", "Денім", 1299.0, true);
 
-        new Clothes("Футболка", ClothesSize.M, "Білий", "Бавовна", 499.99);
+        assertTrue(pants instanceof Pants);
+        assertTrue(pants.toString().contains("Штани"));
+    }
 
-        assertTrue(Clothes.getObjectCount() > before);
+    @Test
+    void shouldCreateShirtsAsClothes() {
+        Clothes shirt = new Shirts("Сорочка", ClothesSize.M, "Білий", "Бавовна", 899.0, "довгий");
+
+        assertTrue(shirt instanceof Shirts);
+        assertTrue(shirt.toString().contains("Сорочка"));
+    }
+
+    @Test
+    void shouldStoreDifferentDerivedTypesInOneClothesList() {
+        ArrayList<Clothes> clothes = new ArrayList<>();
+
+        clothes.add(new Clothes("Шапка", ClothesSize.S, "Чорний", "Вовна", 399.0));
+        clothes.add(new Pants("Штани", ClothesSize.L, "Сірий", "Бавовна", 1099.0, false));
+        clothes.add(new Shirts("Сорочка", ClothesSize.M, "Білий", "Льон", 999.0, "короткий"));
+
+        assertEquals(3, clothes.size());
+        assertTrue(clothes.get(1) instanceof Pants);
+        assertTrue(clothes.get(2) instanceof Shirts);
+    }
+
+    @Test
+    void shouldUsePolymorphicToStringForDerivedTypes() {
+        ArrayList<Clothes> clothes = new ArrayList<>();
+
+        clothes.add(new Pants("Джинси", ClothesSize.L, "Синій", "Денім", 1299.0, true));
+        clothes.add(new Shirts("Сорочка", ClothesSize.M, "Білий", "Бавовна", 899.0, "довгий"));
+
+        assertTrue(clothes.get(0).toString().startsWith("Штани"));
+        assertTrue(clothes.get(1).toString().startsWith("Сорочка"));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenShirtSleeveTypeIsBlank() {
+        assertThrows(IllegalArgumentException.class, () ->
+                new Shirts("Сорочка", ClothesSize.M, "Білий", "Бавовна", 899.0, "")
+        );
     }
 }

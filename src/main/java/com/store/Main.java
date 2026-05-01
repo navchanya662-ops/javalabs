@@ -1,5 +1,6 @@
 package com.store;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -19,18 +20,19 @@ public class Main {
      */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        Wardrobe wardrobe = new Wardrobe();
+        ArrayList<Clothes> clothes = new ArrayList<>();
 
         while (true) {
             printMenu();
             int choice = readMenuChoice(scanner);
 
             switch (choice) {
-                case 1 -> createClothes(scanner, wardrobe);
-                case 2 -> printClothes(wardrobe);
-                case 3 -> copyClothes(scanner, wardrobe);
-                case 4 -> printObjectCount();
-                case 5 -> {
+                case 1 -> createClothes(scanner, clothes);
+                case 2 -> createPants(scanner, clothes);
+                case 3 -> createShirts(scanner, clothes);
+                case 4 -> printClothes(clothes);
+                case 5 -> copyClothes(scanner, clothes);
+                case 6 -> {
                     System.out.println("Роботу програми завершено.");
                     return;
                 }
@@ -44,11 +46,12 @@ public class Main {
      */
     private static void printMenu() {
         System.out.println("\nМеню:");
-        System.out.println("1. Створити новий об'єкт");
-        System.out.println("2. Вивести всі об'єкти");
-        System.out.println("3. Створити копію існуючого об'єкта");
-        System.out.println("4. Показати кількість створених об'єктів");
-        System.out.println("5. Завершити роботу");
+        System.out.println("1. Створити звичайний одяг");
+        System.out.println("2. Створити штани");
+        System.out.println("3. Створити сорочку");
+        System.out.println("4. Вивести всі об'єкти");
+        System.out.println("5. Створити копію існуючого об'єкта");
+        System.out.println("6. Завершити роботу");
         System.out.print("Оберіть пункт меню: ");
     }
 
@@ -56,9 +59,9 @@ public class Main {
      * Зчитує дані з клавіатури, створює об'єкт Clothes і додає його до списку.
      *
      * @param scanner об'єкт для зчитування введення
-     * @param wardrobe шафа для зберігання елементів одягу
+     * @param clothes список елементів одягу
      */
-    private static void createClothes(Scanner scanner, Wardrobe wardrobe) {
+    private static void createClothes(Scanner scanner, ArrayList<Clothes> clothes) {
         try {
             System.out.println("\nНовий елемент одягу");
             System.out.print("Назва: ");
@@ -76,7 +79,7 @@ public class Main {
             System.out.print("Ціна: ");
             double price = readNonNegativeDouble(scanner);
 
-            wardrobe.addClothes(new Clothes(name, size, color, material, price));
+            clothes.add(new Clothes(name, size, color, material, price));
             System.out.println("Об'єкт успішно створено.");
         } catch (IllegalArgumentException exception) {
             System.out.println("Помилка створення об'єкта: " + exception.getMessage());
@@ -84,19 +87,89 @@ public class Main {
     }
 
     /**
+     * Зчитує дані з клавіатури, створює об'єкт Pants і додає його до списку базового типу.
+     *
+     * @param scanner об'єкт для зчитування введення
+     * @param clothes список елементів одягу
+     */
+    private static void createPants(Scanner scanner, ArrayList<Clothes> clothes) {
+        try {
+            System.out.println("\nНові штани");
+            System.out.print("Назва: ");
+            String name = readNonBlankLine(scanner);
+
+            System.out.print("Розмір (" + getAvailableSizes() + "): ");
+            ClothesSize size = readClothesSize(scanner);
+
+            System.out.print("Колір: ");
+            String color = readNonBlankLine(scanner);
+
+            System.out.print("Матеріал: ");
+            String material = readNonBlankLine(scanner);
+
+            System.out.print("Ціна: ");
+            double price = readNonNegativeDouble(scanner);
+
+            System.out.print("Є кишені (так/ні): ");
+            boolean hasPockets = readBooleanAnswer(scanner);
+
+            clothes.add(new Pants(name, size, color, material, price, hasPockets));
+            System.out.println("Штани успішно створено.");
+        } catch (IllegalArgumentException exception) {
+            System.out.println("Помилка створення штанів: " + exception.getMessage());
+        }
+    }
+
+    /**
+     * Зчитує дані з клавіатури, створює об'єкт Shirts і додає його до списку базового типу.
+     *
+     * @param scanner об'єкт для зчитування введення
+     * @param clothes список елементів одягу
+     */
+    private static void createShirts(Scanner scanner, ArrayList<Clothes> clothes) {
+        try {
+            System.out.println("\nНова сорочка");
+            System.out.print("Назва: ");
+            String name = readNonBlankLine(scanner);
+
+            System.out.print("Розмір (" + getAvailableSizes() + "): ");
+            ClothesSize size = readClothesSize(scanner);
+
+            System.out.print("Колір: ");
+            String color = readNonBlankLine(scanner);
+
+            System.out.print("Матеріал: ");
+            String material = readNonBlankLine(scanner);
+
+            System.out.print("Ціна: ");
+            double price = readNonNegativeDouble(scanner);
+
+            System.out.print("Тип рукава: ");
+            String sleeveType = readNonBlankLine(scanner);
+
+            clothes.add(new Shirts(name, size, color, material, price, sleeveType));
+            System.out.println("Сорочку успішно створено.");
+        } catch (IllegalArgumentException exception) {
+            System.out.println("Помилка створення сорочки: " + exception.getMessage());
+        }
+    }
+
+    /**
      * Виводить усі створені елементи одягу.
      *
-     * @param wardrobe шафа з елементами одягу
+     * @param clothes список елементів одягу
      */
-    private static void printClothes(Wardrobe wardrobe) {
-        if (wardrobe.isEmpty()) {
+    private static void printClothes(ArrayList<Clothes> clothes) {
+        if (clothes.isEmpty()) {
             System.out.println("Список елементів одягу порожній.");
             return;
         }
 
         System.out.println("\nСтворені елементи одягу:");
-        for (int i = 0; i < wardrobe.getClothesCount(); i++) {
-            System.out.println((i + 1) + ". " + wardrobe.getClothes(i));
+        int number = 1;
+        for (Clothes item : clothes) {
+            System.out.println(number + ". " + item);
+            number++;
         }
     }
 
@@ -104,31 +177,24 @@ public class Main {
      * Створює копію існуючого елемента одягу та додає її до списку.
      *
      * @param scanner об'єкт для зчитування введення
-     * @param wardrobe шафа з елементами одягу
+     * @param clothes список елементів одягу
      */
-    private static void copyClothes(Scanner scanner, Wardrobe wardrobe) {
-        if (wardrobe.isEmpty()) {
+    private static void copyClothes(Scanner scanner, ArrayList<Clothes> clothes) {
+        if (clothes.isEmpty()) {
             System.out.println("Немає об'єктів для копіювання.");
             return;
         }
 
-        printClothes(wardrobe);
+        printClothes(clothes);
         System.out.print("Введіть номер об'єкта для копіювання: ");
-        int index = readObjectIndex(scanner, wardrobe.getClothesCount());
-        Clothes copy = new Clothes(wardrobe.getClothes(index));
-        wardrobe.addClothes(copy);
+        int index = readObjectIndex(scanner, clothes.size());
+        Clothes copy = new Clothes(clothes.get(index));
+        clothes.add(copy);
         System.out.println("Копію об'єкта успішно створено.");
     }
 
     /**
-     * Виводить кількість створених об'єктів Clothes.
-     */
-    private static void printObjectCount() {
-        System.out.println("Кількість створених об'єктів Clothes: " + Clothes.getObjectCount());
-    }
-
-    /**
-     * Зчитує номер пункту меню та перевіряє, що він знаходиться в межах від 1 до 5.
+     * Зчитує номер пункту меню та перевіряє, що він знаходиться в межах від 1 до 6.
      *
      * @param scanner об'єкт для зчитування введення
      * @return коректний номер пункту меню
@@ -138,12 +204,12 @@ public class Main {
             String input = scanner.nextLine().trim();
             try {
                 int value = Integer.parseInt(input);
-                if (value >= 1 && value <= 5) {
+                if (value >= 1 && value <= 6) {
                     return value;
                 }
             } catch (NumberFormatException ignored) {
             }
-            System.out.print("Введіть номер пункту меню від 1 до 5: ");
+            System.out.print("Введіть номер пункту меню від 1 до 6: ");
         }
     }
 
@@ -182,6 +248,25 @@ public class Main {
             } catch (IllegalArgumentException ignored) {
                 System.out.print("Введіть один із доступних розмірів (" + getAvailableSizes() + "): ");
             }
+        }
+    }
+
+    /**
+     * Зчитує відповідь користувача у форматі так/ні.
+     *
+     * @param scanner об'єкт для зчитування введення
+     * @return true для відповіді "так", false для відповіді "ні"
+     */
+    private static boolean readBooleanAnswer(Scanner scanner) {
+        while (true) {
+            String input = scanner.nextLine().trim().toLowerCase();
+            if (input.equals("так")) {
+                return true;
+            }
+            if (input.equals("ні") || input.equals("нi")) {
+                return false;
+            }
+            System.out.print("Введіть 'так' або 'ні': ");
         }
     }
 
