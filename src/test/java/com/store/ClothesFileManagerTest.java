@@ -16,15 +16,17 @@ class ClothesFileManagerTest {
     Path tempDir;
 
     @Test
-    void shouldLoadAllSupportedTypesFromFile() throws IOException {
-        Path file = tempDir.resolve("input.txt");
-        Files.writeString(file, String.join(System.lineSeparator(),
-                "CLOTHES;Шапка;S;Чорний;Вовна;399.0",
-                "PANTS;Джинси;L;Синій;Денім;1299.0;true",
-                "SHIRTS;Сорочка;M;Білий;Бавовна;899.0;довгий",
-                "JACKETS;Куртка;XL;Чорний;Поліестер;2499.0;true;синтепон",
-                "DRESSES;Сукня;M;Червоний;Шовк;1899.0;міді;true"
-        ));
+    void shouldLoadAllSupportedTypesFromJsonFile() throws IOException {
+        Path file = tempDir.resolve("input.json");
+        Files.writeString(file, """
+                [
+                  {"type":"CLOTHES","name":"Шапка","size":"S","color":"Чорний","material":"Вовна","price":399.0},
+                  {"type":"PANTS","name":"Джинси","size":"L","color":"Синій","material":"Денім","price":1299.0,"hasPockets":true},
+                  {"type":"SHIRTS","name":"Сорочка","size":"M","color":"Білий","material":"Бавовна","price":899.0,"sleeveType":"довгий"},
+                  {"type":"JACKETS","name":"Куртка","size":"XL","color":"Чорний","material":"Поліестер","price":2499.0,"hasHood":true,"insulationType":"синтепон"},
+                  {"type":"DRESSES","name":"Сукня","size":"M","color":"Червоний","material":"Шовк","price":1899.0,"lengthType":"міді","formal":true}
+                ]
+                """);
 
         ClothesFileManager fileManager = new ClothesFileManager();
         ArrayList<Clothes> clothes = fileManager.loadFromFile(file.toString());
@@ -38,13 +40,14 @@ class ClothesFileManagerTest {
     }
 
     @Test
-    void shouldSkipInvalidLinesWhenLoadingFromFile() throws IOException {
-        Path file = tempDir.resolve("input.txt");
-        Files.writeString(file, String.join(System.lineSeparator(),
-                "BROKEN;bad;line",
-                "",
-                "CLOTHES;Шапка;S;Чорний;Вовна;399.0"
-        ));
+    void shouldSkipInvalidRecordsWhenLoadingFromJsonFile() throws IOException {
+        Path file = tempDir.resolve("input.json");
+        Files.writeString(file, """
+                [
+                  {"type":"BROKEN","name":"bad","size":"M","color":"bad","material":"bad","price":1.0},
+                  {"type":"CLOTHES","name":"Шапка","size":"S","color":"Чорний","material":"Вовна","price":399.0}
+                ]
+                """);
 
         ClothesFileManager fileManager = new ClothesFileManager();
         ArrayList<Clothes> clothes = fileManager.loadFromFile(file.toString());
@@ -54,8 +57,8 @@ class ClothesFileManagerTest {
     }
 
     @Test
-    void shouldSaveAndLoadAllSupportedTypes() {
-        Path file = tempDir.resolve("input.txt");
+    void shouldSaveAndLoadAllSupportedTypesAsJson() {
+        Path file = tempDir.resolve("input.json");
         ArrayList<Clothes> original = new ArrayList<>();
         original.add(new Clothes("Шапка", ClothesSize.S, "Чорний", "Вовна", 399.0));
         original.add(new Pants("Джинси", ClothesSize.L, "Синій", "Денім", 1299.0, true));

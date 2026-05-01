@@ -1,0 +1,60 @@
+[
+  {
+    "type": "CLOTHES",
+    "name": "Шапка",
+    "size": "S",
+    "color": "Чорний",
+    "material": "Вовна",
+    "price": 399.0,
+    "hasPockets": false,
+    "hasHood": false,
+    "formal": false
+  },
+  {
+    "type": "PANTS",
+    "name": "Джинси",
+    "size": "L",
+    "color": "Синій",
+    "material": "Денім",
+    "price": 1299.0,
+    "hasPockets": true,
+    "hasHood": false,
+    "formal": false
+  },
+  {
+    "type": "SHIRTS",
+    "name": "Сорочка",
+    "size": "M",
+    "color": "Білий",
+    "material": "Бавовна",
+    "price": 899.0,
+    "hasPockets": false,
+    "sleeveType": "довгий",
+    "hasHood": false,
+    "formal": false
+  },
+  {
+    "type": "JACKETS",
+    "name": "Куртка",
+    "size": "XL",
+    "color": "Чорний",
+    "material": "Поліестер",
+    "price": 2499.0,
+    "hasPockets": false,
+    "hasHood": true,
+    "insulationType": "синтепон",
+    "formal": false
+  },
+  {
+    "type": "DRESSES",
+    "name": "Сукня",
+    "size": "M",
+    "color": "Червоний",
+    "material": "Шовк",
+    "price": 1899.0,
+    "hasPockets": false,
+    "hasHood": false,
+    "lengthType": "міді",
+    "formal": true
+  }
+]

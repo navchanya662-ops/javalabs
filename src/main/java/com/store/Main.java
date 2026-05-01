@@ -7,7 +7,7 @@ import java.util.Scanner;
  * Драйвер програми для створення та перегляду елементів одягу через консольне меню.
  */
 public class Main {
-    private static final String FILE_NAME = "input.txt";
+    private static final String FILE_NAME = "input.json";
 
     /**
      * Забороняє створення об'єктів службового класу Main.
