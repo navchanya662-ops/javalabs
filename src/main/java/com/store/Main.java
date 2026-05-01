@@ -7,6 +7,8 @@ import java.util.Scanner;
  * Драйвер програми для створення та перегляду елементів одягу через консольне меню.
  */
 public class Main {
+    private static final String FILE_NAME = "input.json";
+
     /**
      * Забороняє створення об'єктів службового класу Main.
      */
@@ -20,7 +22,8 @@ public class Main {
      */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        ArrayList<Clothes> clothes = new ArrayList<>();
+        ClothesFileManager fileManager = new ClothesFileManager();
+        ArrayList<Clothes> clothes = fileManager.loadFromFile(FILE_NAME);
 
         while (true) {
             printMenu();
@@ -30,6 +33,8 @@ public class Main {
                 case 1 -> createObject(scanner, clothes);
                 case 2 -> printClothes(clothes);
                 case 3 -> {
+                    fileManager.saveToFile(clothes, FILE_NAME);
+                    System.out.println("Дані збережено у файл " + FILE_NAME + ".");
                     System.out.println("Роботу програми завершено.");
                     return;
                 }
