@@ -166,8 +166,10 @@ public class Main {
         }
 
         System.out.println("\nСтворені елементи одягу:");
-        for (int i = 0; i < clothes.size(); i++) {
-            System.out.println((i + 1) + ". " + clothes.get(i));
+        int number = 1;
+        for (Clothes item : clothes) {
+            System.out.println(number + ". " + item);
+            number++;
         }
     }
 

@@ -66,4 +66,22 @@ class ClothesTest {
         assertTrue(clothes.get(1) instanceof Pants);
         assertTrue(clothes.get(2) instanceof Shirts);
     }
+
+    @Test
+    void shouldUsePolymorphicToStringForDerivedTypes() {
+        ArrayList<Clothes> clothes = new ArrayList<>();
+
+        clothes.add(new Pants("Джинси", ClothesSize.L, "Синій", "Денім", 1299.0, true));
+        clothes.add(new Shirts("Сорочка", ClothesSize.M, "Білий", "Бавовна", 899.0, "довгий"));
+
+        assertTrue(clothes.get(0).toString().startsWith("Штани"));
+        assertTrue(clothes.get(1).toString().startsWith("Сорочка"));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenShirtSleeveTypeIsBlank() {
+        assertThrows(IllegalArgumentException.class, () ->
+                new Shirts("Сорочка", ClothesSize.M, "Білий", "Бавовна", 899.0, "")
+        );
+    }
 }
