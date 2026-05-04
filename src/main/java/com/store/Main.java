@@ -96,7 +96,7 @@ public class Main {
         switch (choice) {
             case 0 -> System.out.println("Повернення до головного меню.");
             case 1 -> searchByName(scanner, clothes);
-            case 2 -> System.out.println("Пошук за розміром буде реалізовано наступним комітом.");
+            case 2 -> searchBySize(scanner, clothes);
             case 3 -> System.out.println("Пошук за кольором буде реалізовано наступним комітом.");
             case 4 -> System.out.println("Пошук за типом об'єкта буде реалізовано наступним комітом.");
             default -> System.out.println("Оберіть пункт підменю від 0 до 4.");
@@ -116,6 +116,26 @@ public class Main {
 
         for (Clothes item : clothes) {
             if (item.getName().toLowerCase().contains(name)) {
+                results.add(item);
+            }
+        }
+
+        printSearchResults(results);
+    }
+
+    /**
+     * Шукає елементи одягу за розміром.
+     *
+     * @param scanner об'єкт для зчитування введення
+     * @param clothes список елементів одягу
+     */
+    private static void searchBySize(Scanner scanner, ArrayList<Clothes> clothes) {
+        System.out.print("Введіть розмір для пошуку (" + getAvailableSizes() + "): ");
+        ClothesSize size = readClothesSize(scanner);
+        ArrayList<Clothes> results = new ArrayList<>();
+
+        for (Clothes item : clothes) {
+            if (item.getSize() == size) {
                 results.add(item);
             }
         }
