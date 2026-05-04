@@ -315,7 +315,10 @@ public class Main {
             System.out.print("Ціна: ");
             double price = readNonNegativeDouble(scanner);
 
-            store.addNewClothes(new Clothes(name, size, color, material, price), 1);
+            System.out.print("Кількість: ");
+            int quantity = readPositiveInt(scanner);
+
+            store.addNewClothes(new Clothes(name, size, color, material, price), quantity);
             System.out.println("Об'єкт успішно створено.");
         } catch (IllegalArgumentException exception) {
             System.out.println("Помилка створення об'єкта: " + exception.getMessage());
@@ -349,7 +352,10 @@ public class Main {
             System.out.print("Є кишені (так/ні): ");
             boolean hasPockets = readBooleanAnswer(scanner);
 
-            store.addNewClothes(new Pants(name, size, color, material, price, hasPockets), 1);
+            System.out.print("Кількість: ");
+            int quantity = readPositiveInt(scanner);
+
+            store.addNewClothes(new Pants(name, size, color, material, price, hasPockets), quantity);
             System.out.println("Штани успішно створено.");
         } catch (IllegalArgumentException exception) {
             System.out.println("Помилка створення штанів: " + exception.getMessage());
@@ -383,7 +389,10 @@ public class Main {
             System.out.print("Тип рукава: ");
             String sleeveType = readNonBlankLine(scanner);
 
-            store.addNewClothes(new Shirts(name, size, color, material, price, sleeveType), 1);
+            System.out.print("Кількість: ");
+            int quantity = readPositiveInt(scanner);
+
+            store.addNewClothes(new Shirts(name, size, color, material, price, sleeveType), quantity);
             System.out.println("Сорочку успішно створено.");
         } catch (IllegalArgumentException exception) {
             System.out.println("Помилка створення сорочки: " + exception.getMessage());
@@ -420,7 +429,10 @@ public class Main {
             System.out.print("Тип утеплення: ");
             String insulationType = readNonBlankLine(scanner);
 
-            store.addNewClothes(new Jackets(name, size, color, material, price, hasHood, insulationType), 1);
+            System.out.print("Кількість: ");
+            int quantity = readPositiveInt(scanner);
+
+            store.addNewClothes(new Jackets(name, size, color, material, price, hasHood, insulationType), quantity);
             System.out.println("Куртку успішно створено.");
         } catch (IllegalArgumentException exception) {
             System.out.println("Помилка створення куртки: " + exception.getMessage());
@@ -457,7 +469,10 @@ public class Main {
             System.out.print("Офіційна (так/ні): ");
             boolean isFormal = readBooleanAnswer(scanner);
 
-            store.addNewClothes(new Dresses(name, size, color, material, price, lengthType, isFormal), 1);
+            System.out.print("Кількість: ");
+            int quantity = readPositiveInt(scanner);
+
+            store.addNewClothes(new Dresses(name, size, color, material, price, lengthType, isFormal), quantity);
             System.out.println("Сукню успішно створено.");
         } catch (IllegalArgumentException exception) {
             System.out.println("Помилка створення сукні: " + exception.getMessage());
@@ -674,6 +689,26 @@ public class Main {
             } catch (NumberFormatException ignored) {
             }
             System.out.print("Введіть невід'ємне число: ");
+        }
+    }
+
+    /**
+     * Зчитує додатне ціле число.
+     *
+     * @param scanner об'єкт для зчитування введення
+     * @return додатне ціле число
+     */
+    private static int readPositiveInt(Scanner scanner) {
+        while (true) {
+            String input = scanner.nextLine().trim();
+            try {
+                int value = Integer.parseInt(input);
+                if (value > 0) {
+                    return value;
+                }
+            } catch (NumberFormatException ignored) {
+            }
+            System.out.print("Введіть ціле число більше за 0: ");
         }
     }
 
