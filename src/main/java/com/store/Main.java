@@ -30,15 +30,16 @@ public class Main {
             int choice = readMenuChoice(scanner);
 
             switch (choice) {
-                case 1 -> createObject(scanner, clothes);
-                case 2 -> printClothes(clothes);
-                case 3 -> {
+                case 1 -> searchObject(scanner, clothes);
+                case 2 -> createObject(scanner, clothes);
+                case 3 -> printClothes(clothes);
+                case 4 -> {
                     fileManager.saveToFile(clothes, FILE_NAME);
                     System.out.println("Дані збережено у файл " + FILE_NAME + ".");
                     System.out.println("Роботу програми завершено.");
                     return;
                 }
-                default -> System.out.println("Оберіть пункт меню від 1 до 3.");
+                default -> System.out.println("Оберіть пункт меню від 1 до 4.");
             }
         }
     }
@@ -48,10 +49,24 @@ public class Main {
      */
     private static void printMenu() {
         System.out.println("\nМеню:");
-        System.out.println("1. Створити новий об'єкт");
-        System.out.println("2. Вивести інформацію про всі об'єкти");
-        System.out.println("3. Завершити роботу програми");
+        System.out.println("1. Пошук об'єкта");
+        System.out.println("2. Створити новий об'єкт");
+        System.out.println("3. Вивести інформацію про всі об'єкти");
+        System.out.println("4. Завершити роботу програми");
         System.out.print("Оберіть пункт меню: ");
+    }
+
+    /**
+     * Виводить підменю пошуку об'єктів.
+     */
+    private static void printSearchMenu() {
+        System.out.println("\nОберіть критерій пошуку:");
+        System.out.println("1. Пошук за назвою");
+        System.out.println("2. Пошук за розміром");
+        System.out.println("3. Пошук за кольором");
+        System.out.println("4. Пошук за типом об'єкта");
+        System.out.println("0. Повернутися до головного меню");
+        System.out.print("Ваш вибір: ");
     }
 
     /**
@@ -66,6 +81,26 @@ public class Main {
         System.out.println("5. Сукня");
         System.out.println("0. Повернутися до головного меню");
         System.out.print("Ваш вибір: ");
+    }
+
+    /**
+     * Обробляє підменю пошуку об'єкта.
+     *
+     * @param scanner об'єкт для зчитування введення
+     * @param clothes список елементів одягу
+     */
+    private static void searchObject(Scanner scanner, ArrayList<Clothes> clothes) {
+        printSearchMenu();
+        int choice = readSearchChoice(scanner);
+
+        switch (choice) {
+            case 0 -> System.out.println("Повернення до головного меню.");
+            case 1 -> System.out.println("Пошук за назвою буде реалізовано наступним комітом.");
+            case 2 -> System.out.println("Пошук за розміром буде реалізовано наступним комітом.");
+            case 3 -> System.out.println("Пошук за кольором буде реалізовано наступним комітом.");
+            case 4 -> System.out.println("Пошук за типом об'єкта буде реалізовано наступним комітом.");
+            default -> System.out.println("Оберіть пункт підменю від 0 до 4.");
+        }
     }
 
     /**
@@ -302,7 +337,7 @@ public class Main {
     }
 
     /**
-     * Зчитує номер пункту меню та перевіряє, що він знаходиться в межах від 1 до 3.
+     * Зчитує номер пункту меню та перевіряє, що він знаходиться в межах від 1 до 4.
      *
      * @param scanner об'єкт для зчитування введення
      * @return коректний номер пункту меню
@@ -312,12 +347,32 @@ public class Main {
             String input = scanner.nextLine().trim();
             try {
                 int value = Integer.parseInt(input);
-                if (value >= 1 && value <= 3) {
+                if (value >= 1 && value <= 4) {
                     return value;
                 }
             } catch (NumberFormatException ignored) {
             }
-            System.out.print("Введіть номер пункту меню від 1 до 3: ");
+            System.out.print("Введіть номер пункту меню від 1 до 4: ");
+        }
+    }
+
+    /**
+     * Зчитує номер пункту підменю пошуку.
+     *
+     * @param scanner об'єкт для зчитування введення
+     * @return коректний номер пункту підменю пошуку
+     */
+    private static int readSearchChoice(Scanner scanner) {
+        while (true) {
+            String input = scanner.nextLine().trim();
+            try {
+                int value = Integer.parseInt(input);
+                if (value >= 0 && value <= 4) {
+                    return value;
+                }
+            } catch (NumberFormatException ignored) {
+            }
+            System.out.print("Введіть номер пункту підменю від 0 до 4: ");
         }
     }
 
