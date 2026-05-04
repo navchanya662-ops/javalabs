@@ -98,7 +98,7 @@ public class Main {
             case 1 -> searchByName(scanner, clothes);
             case 2 -> searchBySize(scanner, clothes);
             case 3 -> searchByColor(scanner, clothes);
-            case 4 -> System.out.println("Пошук за типом об'єкта буде реалізовано наступним комітом.");
+            case 4 -> searchByType(scanner, clothes);
             default -> System.out.println("Оберіть пункт підменю від 0 до 4.");
         }
     }
@@ -161,6 +161,62 @@ public class Main {
         }
 
         printSearchResults(results);
+    }
+
+    /**
+     * Шукає елементи одягу за типом об'єкта.
+     *
+     * @param scanner об'єкт для зчитування введення
+     * @param clothes список елементів одягу
+     */
+    private static void searchByType(Scanner scanner, ArrayList<Clothes> clothes) {
+        printTypeSearchMenu();
+        int choice = readTypeSearchChoice(scanner);
+        if (choice == 0) {
+            System.out.println("Повернення до підменю пошуку.");
+            return;
+        }
+
+        ArrayList<Clothes> results = new ArrayList<>();
+        for (Clothes item : clothes) {
+            if (matchesType(item, choice)) {
+                results.add(item);
+            }
+        }
+
+        printSearchResults(results);
+    }
+
+    /**
+     * Виводить підменю вибору типу об'єкта для пошуку.
+     */
+    private static void printTypeSearchMenu() {
+        System.out.println("\nОберіть тип об'єкта:");
+        System.out.println("1. Звичайний одяг");
+        System.out.println("2. Штани");
+        System.out.println("3. Сорочка");
+        System.out.println("4. Куртка");
+        System.out.println("5. Сукня");
+        System.out.println("0. Повернутися до підменю пошуку");
+        System.out.print("Ваш вибір: ");
+    }
+
+    /**
+     * Перевіряє, чи відповідає об'єкт обраному типу.
+     *
+     * @param item елемент одягу
+     * @param choice номер типу в меню
+     * @return true, якщо об'єкт відповідає обраному типу
+     */
+    private static boolean matchesType(Clothes item, int choice) {
+        return switch (choice) {
+            case 1 -> item.getClass() == Clothes.class;
+            case 2 -> item instanceof Pants;
+            case 3 -> item instanceof Shirts;
+            case 4 -> item instanceof Jackets;
+            case 5 -> item instanceof Dresses;
+            default -> false;
+        };
     }
 
     /**
@@ -452,6 +508,26 @@ public class Main {
             } catch (NumberFormatException ignored) {
             }
             System.out.print("Введіть номер пункту підменю від 0 до 4: ");
+        }
+    }
+
+    /**
+     * Зчитує номер типу об'єкта для пошуку.
+     *
+     * @param scanner об'єкт для зчитування введення
+     * @return коректний номер типу об'єкта
+     */
+    private static int readTypeSearchChoice(Scanner scanner) {
+        while (true) {
+            String input = scanner.nextLine().trim();
+            try {
+                int value = Integer.parseInt(input);
+                if (value >= 0 && value <= 5) {
+                    return value;
+                }
+            } catch (NumberFormatException ignored) {
+            }
+            System.out.print("Введіть номер типу від 0 до 5: ");
         }
     }
 
