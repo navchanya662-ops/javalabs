@@ -95,12 +95,32 @@ public class Main {
 
         switch (choice) {
             case 0 -> System.out.println("Повернення до головного меню.");
-            case 1 -> System.out.println("Пошук за назвою буде реалізовано наступним комітом.");
+            case 1 -> searchByName(scanner, clothes);
             case 2 -> System.out.println("Пошук за розміром буде реалізовано наступним комітом.");
             case 3 -> System.out.println("Пошук за кольором буде реалізовано наступним комітом.");
             case 4 -> System.out.println("Пошук за типом об'єкта буде реалізовано наступним комітом.");
             default -> System.out.println("Оберіть пункт підменю від 0 до 4.");
         }
+    }
+
+    /**
+     * Шукає елементи одягу за назвою.
+     *
+     * @param scanner об'єкт для зчитування введення
+     * @param clothes список елементів одягу
+     */
+    private static void searchByName(Scanner scanner, ArrayList<Clothes> clothes) {
+        System.out.print("Введіть назву для пошуку: ");
+        String name = readNonBlankLine(scanner).toLowerCase();
+        ArrayList<Clothes> results = new ArrayList<>();
+
+        for (Clothes item : clothes) {
+            if (item.getName().toLowerCase().contains(name)) {
+                results.add(item);
+            }
+        }
+
+        printSearchResults(results);
     }
 
     /**
@@ -311,6 +331,25 @@ public class Main {
         System.out.println("\nСтворені елементи одягу:");
         int number = 1;
         for (Clothes item : clothes) {
+            System.out.println(number + ". " + item);
+            number++;
+        }
+    }
+
+    /**
+     * Виводить результати пошуку.
+     *
+     * @param results знайдені елементи одягу
+     */
+    private static void printSearchResults(ArrayList<Clothes> results) {
+        if (results.isEmpty()) {
+            System.out.println("За заданим критерієм нічого не знайдено.");
+            return;
+        }
+
+        System.out.println("\nРезультати пошуку:");
+        int number = 1;
+        for (Clothes item : results) {
             System.out.println(number + ". " + item);
             number++;
         }
