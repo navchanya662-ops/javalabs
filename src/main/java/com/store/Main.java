@@ -97,7 +97,7 @@ public class Main {
             case 0 -> System.out.println("Повернення до головного меню.");
             case 1 -> searchByName(scanner, clothes);
             case 2 -> searchBySize(scanner, clothes);
-            case 3 -> System.out.println("Пошук за кольором буде реалізовано наступним комітом.");
+            case 3 -> searchByColor(scanner, clothes);
             case 4 -> System.out.println("Пошук за типом об'єкта буде реалізовано наступним комітом.");
             default -> System.out.println("Оберіть пункт підменю від 0 до 4.");
         }
@@ -136,6 +136,26 @@ public class Main {
 
         for (Clothes item : clothes) {
             if (item.getSize() == size) {
+                results.add(item);
+            }
+        }
+
+        printSearchResults(results);
+    }
+
+    /**
+     * Шукає елементи одягу за кольором.
+     *
+     * @param scanner об'єкт для зчитування введення
+     * @param clothes список елементів одягу
+     */
+    private static void searchByColor(Scanner scanner, ArrayList<Clothes> clothes) {
+        System.out.print("Введіть колір для пошуку: ");
+        String color = readNonBlankLine(scanner).toLowerCase();
+        ArrayList<Clothes> results = new ArrayList<>();
+
+        for (Clothes item : clothes) {
+            if (item.getColor().toLowerCase().contains(color)) {
                 results.add(item);
             }
         }
