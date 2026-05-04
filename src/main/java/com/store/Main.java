@@ -23,23 +23,22 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         ClothesFileManager fileManager = new ClothesFileManager();
-        Store store = fileManager.loadStoreFromFile(FILE_NAME);
+        ArrayList<Clothes> clothes = fileManager.loadFromFile(FILE_NAME);
 
         while (true) {
             printMenu();
             int choice = readMenuChoice(scanner);
 
             switch (choice) {
-                case 1 -> searchObject(scanner, store);
-                case 2 -> createObject(scanner, store);
-                case 3 -> printClothes(store);
-                case 4 -> {
-                    fileManager.saveStoreToFile(store, FILE_NAME);
+                case 1 -> createObject(scanner, clothes);
+                case 2 -> printClothes(clothes);
+                case 3 -> {
+                    fileManager.saveToFile(clothes, FILE_NAME);
                     System.out.println("Дані збережено у файл " + FILE_NAME + ".");
                     System.out.println("Роботу програми завершено.");
                     return;
                 }
-                default -> System.out.println("Оберіть пункт меню від 1 до 4.");
+                default -> System.out.println("Оберіть пункт меню від 1 до 3.");
             }
         }
     }
@@ -49,24 +48,10 @@ public class Main {
      */
     private static void printMenu() {
         System.out.println("\nМеню:");
-        System.out.println("1. Пошук об'єкта");
-        System.out.println("2. Створити новий об'єкт");
-        System.out.println("3. Вивести інформацію про всі об'єкти");
-        System.out.println("4. Завершити роботу програми");
+        System.out.println("1. Створити новий об'єкт");
+        System.out.println("2. Вивести інформацію про всі об'єкти");
+        System.out.println("3. Завершити роботу програми");
         System.out.print("Оберіть пункт меню: ");
-    }
-
-    /**
-     * Виводить підменю пошуку об'єктів.
-     */
-    private static void printSearchMenu() {
-        System.out.println("\nОберіть критерій пошуку:");
-        System.out.println("1. Пошук за назвою");
-        System.out.println("2. Пошук за розміром");
-        System.out.println("3. Пошук за кольором");
-        System.out.println("4. Пошук за типом об'єкта");
-        System.out.println("0. Повернутися до головного меню");
-        System.out.print("Ваш вибір: ");
     }
 
     /**
@@ -84,205 +69,22 @@ public class Main {
     }
 
     /**
-     * Обробляє підменю пошуку об'єкта.
-     *
-     * @param scanner об'єкт для зчитування введення
-     * @param store магазин з товарами
-     */
-    private static void searchObject(Scanner scanner, Store store) {
-        printSearchMenu();
-        int choice = readSearchChoice(scanner);
-
-        switch (choice) {
-            case 0 -> System.out.println("Повернення до головного меню.");
-            case 1 -> searchByName(scanner, store);
-            case 2 -> searchBySize(scanner, store);
-            case 3 -> searchByColor(scanner, store);
-            case 4 -> searchByType(scanner, store);
-            default -> System.out.println("Оберіть пункт підменю від 0 до 4.");
-        }
-    }
-
-    /**
-     * Шукає елементи одягу за назвою.
-     *
-     * @param scanner об'єкт для зчитування введення
-     * @param store магазин з товарами
-     */
-    private static void searchByName(Scanner scanner, Store store) {
-        System.out.print("Введіть назву для пошуку: ");
-        String name = readNonBlankLine(scanner);
-        printSearchResults(store.findByName(name));
-    }
-
-    /**
-     * Шукає елементи одягу за розміром.
-     *
-     * @param scanner об'єкт для зчитування введення
-     * @param store магазин з товарами
-     */
-    private static void searchBySize(Scanner scanner, Store store) {
-        System.out.print("Введіть розмір для пошуку (" + getAvailableSizes() + "): ");
-        ClothesSize size = readClothesSize(scanner);
-        printSearchResults(store.findBySize(size));
-    }
-
-    /**
-     * Шукає елементи одягу за кольором.
-     *
-     * @param scanner об'єкт для зчитування введення
-     * @param store магазин з товарами
-     */
-    private static void searchByColor(Scanner scanner, Store store) {
-        System.out.print("Введіть колір для пошуку: ");
-        String color = readNonBlankLine(scanner);
-        printSearchResults(store.findByColor(color));
-    }
-
-    /**
-     * Шукає елементи одягу за типом об'єкта.
-     *
-     * @param scanner об'єкт для зчитування введення
-     * @param store магазин з товарами
-     */
-    private static void searchByType(Scanner scanner, Store store) {
-        printTypeSearchMenu();
-        int choice = readTypeSearchChoice(scanner);
-        if (choice == 0) {
-            System.out.println("Повернення до підменю пошуку.");
-            return;
-        }
-
-        printSearchResults(store.findByType(choice));
-    }
-
-    /**
-     * Повертає елементи одягу, назва яких містить заданий текст.
-     *
-     * @param clothes список елементів одягу
-     * @param name текст для пошуку в назві
-     * @return список знайдених елементів одягу
-     */
-    static ArrayList<Clothes> findByName(ArrayList<Clothes> clothes, String name) {
-        String searchValue = name.toLowerCase();
-        ArrayList<Clothes> results = new ArrayList<>();
-
-        for (Clothes item : clothes) {
-            if (item.getName().toLowerCase().contains(searchValue)) {
-                results.add(item);
-            }
-        }
-
-        return results;
-    }
-
-    /**
-     * Повертає елементи одягу із заданим розміром.
-     *
-     * @param clothes список елементів одягу
-     * @param size розмір для пошуку
-     * @return список знайдених елементів одягу
-     */
-    static ArrayList<Clothes> findBySize(ArrayList<Clothes> clothes, ClothesSize size) {
-        ArrayList<Clothes> results = new ArrayList<>();
-
-        for (Clothes item : clothes) {
-            if (item.getSize() == size) {
-                results.add(item);
-            }
-        }
-
-        return results;
-    }
-
-    /**
-     * Повертає елементи одягу, колір яких містить заданий текст.
-     *
-     * @param clothes список елементів одягу
-     * @param color текст для пошуку в кольорі
-     * @return список знайдених елементів одягу
-     */
-    static ArrayList<Clothes> findByColor(ArrayList<Clothes> clothes, String color) {
-        String searchValue = color.toLowerCase();
-        ArrayList<Clothes> results = new ArrayList<>();
-
-        for (Clothes item : clothes) {
-            if (item.getColor().toLowerCase().contains(searchValue)) {
-                results.add(item);
-            }
-        }
-
-        return results;
-    }
-
-    /**
-     * Повертає елементи одягу заданого типу.
-     *
-     * @param clothes список елементів одягу
-     * @param choice номер типу в меню
-     * @return список знайдених елементів одягу
-     */
-    static ArrayList<Clothes> findByType(ArrayList<Clothes> clothes, int choice) {
-        ArrayList<Clothes> results = new ArrayList<>();
-
-        for (Clothes item : clothes) {
-            if (matchesType(item, choice)) {
-                results.add(item);
-            }
-        }
-
-        return results;
-    }
-
-    /**
-     * Виводить підменю вибору типу об'єкта для пошуку.
-     */
-    private static void printTypeSearchMenu() {
-        System.out.println("\nОберіть тип об'єкта:");
-        System.out.println("1. Звичайний одяг");
-        System.out.println("2. Штани");
-        System.out.println("3. Сорочка");
-        System.out.println("4. Куртка");
-        System.out.println("5. Сукня");
-        System.out.println("0. Повернутися до підменю пошуку");
-        System.out.print("Ваш вибір: ");
-    }
-
-    /**
-     * Перевіряє, чи відповідає об'єкт обраному типу.
-     *
-     * @param item елемент одягу
-     * @param choice номер типу в меню
-     * @return true, якщо об'єкт відповідає обраному типу
-     */
-    static boolean matchesType(Clothes item, int choice) {
-        return switch (choice) {
-            case 1 -> item.getClass() == Clothes.class;
-            case 2 -> item instanceof Pants;
-            case 3 -> item instanceof Shirts;
-            case 4 -> item instanceof Jackets;
-            case 5 -> item instanceof Dresses;
-            default -> false;
-        };
-    }
-
-    /**
      * Обробляє підменю створення нового об'єкта.
      *
      * @param scanner об'єкт для зчитування введення
-     * @param store магазин з товарами
+     * @param clothes список елементів одягу
      */
-    private static void createObject(Scanner scanner, Store store) {
+    private static void createObject(Scanner scanner, ArrayList<Clothes> clothes) {
         printCreateObjectMenu();
         int choice = readCreateObjectChoice(scanner);
 
         switch (choice) {
             case 0 -> System.out.println("Повернення до головного меню.");
-            case 1 -> createClothes(scanner, store);
-            case 2 -> createPants(scanner, store);
-            case 3 -> createShirts(scanner, store);
-            case 4 -> createJackets(scanner, store);
-            case 5 -> createDresses(scanner, store);
+            case 1 -> createClothes(scanner, clothes);
+            case 2 -> createPants(scanner, clothes);
+            case 3 -> createShirts(scanner, clothes);
+            case 4 -> createJackets(scanner, clothes);
+            case 5 -> createDresses(scanner, clothes);
             default -> System.out.println("Оберіть пункт підменю від 0 до 5.");
         }
     }
@@ -291,9 +93,9 @@ public class Main {
      * Зчитує дані з клавіатури, створює об'єкт Clothes і додає його до списку.
      *
      * @param scanner об'єкт для зчитування введення
-     * @param store магазин з товарами
+     * @param clothes список елементів одягу
      */
-    private static void createClothes(Scanner scanner, Store store) {
+    private static void createClothes(Scanner scanner, ArrayList<Clothes> clothes) {
         try {
             System.out.println("\nНовий елемент одягу");
             System.out.print("Назва: ");
@@ -311,10 +113,7 @@ public class Main {
             System.out.print("Ціна: ");
             double price = readNonNegativeDouble(scanner);
 
-            System.out.print("Кількість: ");
-            int quantity = readPositiveInt(scanner);
-
-            store.addNewClothes(new Clothes(name, size, color, material, price), quantity);
+            clothes.add(new Clothes(name, size, color, material, price));
             System.out.println("Об'єкт успішно створено.");
         } catch (IllegalArgumentException exception) {
             System.out.println("Помилка створення об'єкта: " + exception.getMessage());
@@ -325,9 +124,9 @@ public class Main {
      * Зчитує дані з клавіатури, створює об'єкт Pants і додає його до списку базового типу.
      *
      * @param scanner об'єкт для зчитування введення
-     * @param store магазин з товарами
+     * @param clothes список елементів одягу
      */
-    private static void createPants(Scanner scanner, Store store) {
+    private static void createPants(Scanner scanner, ArrayList<Clothes> clothes) {
         try {
             System.out.println("\nНові штани");
             System.out.print("Назва: ");
@@ -348,10 +147,7 @@ public class Main {
             System.out.print("Є кишені (так/ні): ");
             boolean hasPockets = readBooleanAnswer(scanner);
 
-            System.out.print("Кількість: ");
-            int quantity = readPositiveInt(scanner);
-
-            store.addNewClothes(new Pants(name, size, color, material, price, hasPockets), quantity);
+            clothes.add(new Pants(name, size, color, material, price, hasPockets));
             System.out.println("Штани успішно створено.");
         } catch (IllegalArgumentException exception) {
             System.out.println("Помилка створення штанів: " + exception.getMessage());
@@ -362,9 +158,9 @@ public class Main {
      * Зчитує дані з клавіатури, створює об'єкт Shirts і додає його до списку базового типу.
      *
      * @param scanner об'єкт для зчитування введення
-     * @param store магазин з товарами
+     * @param clothes список елементів одягу
      */
-    private static void createShirts(Scanner scanner, Store store) {
+    private static void createShirts(Scanner scanner, ArrayList<Clothes> clothes) {
         try {
             System.out.println("\nНова сорочка");
             System.out.print("Назва: ");
@@ -385,10 +181,7 @@ public class Main {
             System.out.print("Тип рукава: ");
             String sleeveType = readNonBlankLine(scanner);
 
-            System.out.print("Кількість: ");
-            int quantity = readPositiveInt(scanner);
-
-            store.addNewClothes(new Shirts(name, size, color, material, price, sleeveType), quantity);
+            clothes.add(new Shirts(name, size, color, material, price, sleeveType));
             System.out.println("Сорочку успішно створено.");
         } catch (IllegalArgumentException exception) {
             System.out.println("Помилка створення сорочки: " + exception.getMessage());
@@ -399,9 +192,9 @@ public class Main {
      * Зчитує дані з клавіатури, створює об'єкт Jackets і додає його до списку базового типу.
      *
      * @param scanner об'єкт для зчитування введення
-     * @param store магазин з товарами
+     * @param clothes список елементів одягу
      */
-    private static void createJackets(Scanner scanner, Store store) {
+    private static void createJackets(Scanner scanner, ArrayList<Clothes> clothes) {
         try {
             System.out.println("\nНова куртка");
             System.out.print("Назва: ");
@@ -425,10 +218,7 @@ public class Main {
             System.out.print("Тип утеплення: ");
             String insulationType = readNonBlankLine(scanner);
 
-            System.out.print("Кількість: ");
-            int quantity = readPositiveInt(scanner);
-
-            store.addNewClothes(new Jackets(name, size, color, material, price, hasHood, insulationType), quantity);
+            clothes.add(new Jackets(name, size, color, material, price, hasHood, insulationType));
             System.out.println("Куртку успішно створено.");
         } catch (IllegalArgumentException exception) {
             System.out.println("Помилка створення куртки: " + exception.getMessage());
@@ -439,9 +229,9 @@ public class Main {
      * Зчитує дані з клавіатури, створює об'єкт Dresses і додає його до списку базового типу.
      *
      * @param scanner об'єкт для зчитування введення
-     * @param store магазин з товарами
+     * @param clothes список елементів одягу
      */
-    private static void createDresses(Scanner scanner, Store store) {
+    private static void createDresses(Scanner scanner, ArrayList<Clothes> clothes) {
         try {
             System.out.println("\nНова сукня");
             System.out.print("Назва: ");
@@ -465,10 +255,7 @@ public class Main {
             System.out.print("Офіційна (так/ні): ");
             boolean isFormal = readBooleanAnswer(scanner);
 
-            System.out.print("Кількість: ");
-            int quantity = readPositiveInt(scanner);
-
-            store.addNewClothes(new Dresses(name, size, color, material, price, lengthType, isFormal), quantity);
+            clothes.add(new Dresses(name, size, color, material, price, lengthType, isFormal));
             System.out.println("Сукню успішно створено.");
         } catch (IllegalArgumentException exception) {
             System.out.println("Помилка створення сукні: " + exception.getMessage());
@@ -478,44 +265,44 @@ public class Main {
     /**
      * Виводить усі створені елементи одягу.
      *
-     * @param store магазин з товарами
+     * @param clothes список елементів одягу
      */
-    private static void printClothes(Store store) {
-        if (store.isEmpty()) {
+    private static void printClothes(ArrayList<Clothes> clothes) {
+        if (clothes.isEmpty()) {
             System.out.println("Список елементів одягу порожній.");
             return;
         }
 
         System.out.println("\nСтворені елементи одягу:");
         int number = 1;
-        ArrayList<Clothes> clothes = store.getClothes();
-        for (int i = 0; i < clothes.size(); i++) {
-            System.out.println(number + ". " + clothes.get(i) + " | Кількість: " + store.getQuantity(i));
-            number++;
-        }
-    }
-
-    /**
-     * Виводить результати пошуку.
-     *
-     * @param results знайдені елементи одягу
-     */
-    private static void printSearchResults(ArrayList<Clothes> results) {
-        if (results.isEmpty()) {
-            System.out.println("За заданим критерієм нічого не знайдено.");
-            return;
-        }
-
-        System.out.println("\nРезультати пошуку:");
-        int number = 1;
-        for (Clothes item : results) {
+        for (Clothes item : clothes) {
             System.out.println(number + ". " + item);
             number++;
         }
     }
 
     /**
-     * Зчитує номер пункту меню та перевіряє, що він знаходиться в межах від 1 до 4.
+     * Створює копію існуючого елемента одягу та додає її до списку.
+     *
+     * @param scanner об'єкт для зчитування введення
+     * @param clothes список елементів одягу
+     */
+    private static void copyClothes(Scanner scanner, ArrayList<Clothes> clothes) {
+        if (clothes.isEmpty()) {
+            System.out.println("Немає об'єктів для копіювання.");
+            return;
+        }
+
+        printClothes(clothes);
+        System.out.print("Введіть номер об'єкта для копіювання: ");
+        int index = readObjectIndex(scanner, clothes.size());
+        Clothes copy = new Clothes(clothes.get(index));
+        clothes.add(copy);
+        System.out.println("Копію об'єкта успішно створено.");
+    }
+
+    /**
+     * Зчитує номер пункту меню та перевіряє, що він знаходиться в межах від 1 до 3.
      *
      * @param scanner об'єкт для зчитування введення
      * @return коректний номер пункту меню
@@ -525,52 +312,12 @@ public class Main {
             String input = scanner.nextLine().trim();
             try {
                 int value = Integer.parseInt(input);
-                if (value >= 1 && value <= 4) {
+                if (value >= 1 && value <= 3) {
                     return value;
                 }
             } catch (NumberFormatException ignored) {
             }
-            System.out.print("Введіть номер пункту меню від 1 до 4: ");
-        }
-    }
-
-    /**
-     * Зчитує номер пункту підменю пошуку.
-     *
-     * @param scanner об'єкт для зчитування введення
-     * @return коректний номер пункту підменю пошуку
-     */
-    private static int readSearchChoice(Scanner scanner) {
-        while (true) {
-            String input = scanner.nextLine().trim();
-            try {
-                int value = Integer.parseInt(input);
-                if (value >= 0 && value <= 4) {
-                    return value;
-                }
-            } catch (NumberFormatException ignored) {
-            }
-            System.out.print("Введіть номер пункту підменю від 0 до 4: ");
-        }
-    }
-
-    /**
-     * Зчитує номер типу об'єкта для пошуку.
-     *
-     * @param scanner об'єкт для зчитування введення
-     * @return коректний номер типу об'єкта
-     */
-    private static int readTypeSearchChoice(Scanner scanner) {
-        while (true) {
-            String input = scanner.nextLine().trim();
-            try {
-                int value = Integer.parseInt(input);
-                if (value >= 0 && value <= 5) {
-                    return value;
-                }
-            } catch (NumberFormatException ignored) {
-            }
-            System.out.print("Введіть номер типу від 0 до 5: ");
+            System.out.print("Введіть номер пункту меню від 1 до 3: ");
         }
     }
 
@@ -685,26 +432,6 @@ public class Main {
             } catch (NumberFormatException ignored) {
             }
             System.out.print("Введіть невід'ємне число: ");
-        }
-    }
-
-    /**
-     * Зчитує додатне ціле число.
-     *
-     * @param scanner об'єкт для зчитування введення
-     * @return додатне ціле число
-     */
-    private static int readPositiveInt(Scanner scanner) {
-        while (true) {
-            String input = scanner.nextLine().trim();
-            try {
-                int value = Integer.parseInt(input);
-                if (value > 0) {
-                    return value;
-                }
-            } catch (NumberFormatException ignored) {
-            }
-            System.out.print("Введіть ціле число більше за 0: ");
         }
     }
 
