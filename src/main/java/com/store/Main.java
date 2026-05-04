@@ -111,16 +111,8 @@ public class Main {
      */
     private static void searchByName(Scanner scanner, ArrayList<Clothes> clothes) {
         System.out.print("Введіть назву для пошуку: ");
-        String name = readNonBlankLine(scanner).toLowerCase();
-        ArrayList<Clothes> results = new ArrayList<>();
-
-        for (Clothes item : clothes) {
-            if (item.getName().toLowerCase().contains(name)) {
-                results.add(item);
-            }
-        }
-
-        printSearchResults(results);
+        String name = readNonBlankLine(scanner);
+        printSearchResults(findByName(clothes, name));
     }
 
     /**
@@ -132,15 +124,7 @@ public class Main {
     private static void searchBySize(Scanner scanner, ArrayList<Clothes> clothes) {
         System.out.print("Введіть розмір для пошуку (" + getAvailableSizes() + "): ");
         ClothesSize size = readClothesSize(scanner);
-        ArrayList<Clothes> results = new ArrayList<>();
-
-        for (Clothes item : clothes) {
-            if (item.getSize() == size) {
-                results.add(item);
-            }
-        }
-
-        printSearchResults(results);
+        printSearchResults(findBySize(clothes, size));
     }
 
     /**
@@ -151,16 +135,8 @@ public class Main {
      */
     private static void searchByColor(Scanner scanner, ArrayList<Clothes> clothes) {
         System.out.print("Введіть колір для пошуку: ");
-        String color = readNonBlankLine(scanner).toLowerCase();
-        ArrayList<Clothes> results = new ArrayList<>();
-
-        for (Clothes item : clothes) {
-            if (item.getColor().toLowerCase().contains(color)) {
-                results.add(item);
-            }
-        }
-
-        printSearchResults(results);
+        String color = readNonBlankLine(scanner);
+        printSearchResults(findByColor(clothes, color));
     }
 
     /**
@@ -177,14 +153,85 @@ public class Main {
             return;
         }
 
+        printSearchResults(findByType(clothes, choice));
+    }
+
+    /**
+     * Повертає елементи одягу, назва яких містить заданий текст.
+     *
+     * @param clothes список елементів одягу
+     * @param name текст для пошуку в назві
+     * @return список знайдених елементів одягу
+     */
+    static ArrayList<Clothes> findByName(ArrayList<Clothes> clothes, String name) {
+        String searchValue = name.toLowerCase();
         ArrayList<Clothes> results = new ArrayList<>();
+
+        for (Clothes item : clothes) {
+            if (item.getName().toLowerCase().contains(searchValue)) {
+                results.add(item);
+            }
+        }
+
+        return results;
+    }
+
+    /**
+     * Повертає елементи одягу із заданим розміром.
+     *
+     * @param clothes список елементів одягу
+     * @param size розмір для пошуку
+     * @return список знайдених елементів одягу
+     */
+    static ArrayList<Clothes> findBySize(ArrayList<Clothes> clothes, ClothesSize size) {
+        ArrayList<Clothes> results = new ArrayList<>();
+
+        for (Clothes item : clothes) {
+            if (item.getSize() == size) {
+                results.add(item);
+            }
+        }
+
+        return results;
+    }
+
+    /**
+     * Повертає елементи одягу, колір яких містить заданий текст.
+     *
+     * @param clothes список елементів одягу
+     * @param color текст для пошуку в кольорі
+     * @return список знайдених елементів одягу
+     */
+    static ArrayList<Clothes> findByColor(ArrayList<Clothes> clothes, String color) {
+        String searchValue = color.toLowerCase();
+        ArrayList<Clothes> results = new ArrayList<>();
+
+        for (Clothes item : clothes) {
+            if (item.getColor().toLowerCase().contains(searchValue)) {
+                results.add(item);
+            }
+        }
+
+        return results;
+    }
+
+    /**
+     * Повертає елементи одягу заданого типу.
+     *
+     * @param clothes список елементів одягу
+     * @param choice номер типу в меню
+     * @return список знайдених елементів одягу
+     */
+    static ArrayList<Clothes> findByType(ArrayList<Clothes> clothes, int choice) {
+        ArrayList<Clothes> results = new ArrayList<>();
+
         for (Clothes item : clothes) {
             if (matchesType(item, choice)) {
                 results.add(item);
             }
         }
 
-        printSearchResults(results);
+        return results;
     }
 
     /**
@@ -208,7 +255,7 @@ public class Main {
      * @param choice номер типу в меню
      * @return true, якщо об'єкт відповідає обраному типу
      */
-    private static boolean matchesType(Clothes item, int choice) {
+    static boolean matchesType(Clothes item, int choice) {
         return switch (choice) {
             case 1 -> item.getClass() == Clothes.class;
             case 2 -> item instanceof Pants;
