@@ -78,4 +78,21 @@ class ClothesFileManagerTest {
         assertTrue(loaded.get(4) instanceof Dresses);
         assertEquals(original.get(0).getName(), loaded.get(0).getName());
     }
+
+    @Test
+    void shouldSaveAndLoadStoreWithQuantitiesAsJson() {
+        Path file = tempDir.resolve("input.json");
+        Store original = new Store();
+        original.addNewClothes(new Clothes("Шапка", ClothesSize.S, "Чорний", "Вовна", 399.0), 4);
+        original.addNewClothes(new Pants("Джинси", ClothesSize.L, "Синій", "Денім", 1299.0, true), 2);
+
+        ClothesFileManager fileManager = new ClothesFileManager();
+        fileManager.saveStoreToFile(original, file.toString());
+        Store loaded = fileManager.loadStoreFromFile(file.toString());
+
+        assertEquals(2, loaded.getTotalUniqueItems());
+        assertEquals(4, loaded.getQuantity(0));
+        assertEquals(2, loaded.getQuantity(1));
+        assertTrue(loaded.getClothes().get(1) instanceof Pants);
+    }
 }

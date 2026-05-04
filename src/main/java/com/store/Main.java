@@ -23,11 +23,7 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         ClothesFileManager fileManager = new ClothesFileManager();
-        Store store = new Store();
-        ArrayList<Clothes> loadedClothes = fileManager.loadFromFile(FILE_NAME);
-        for (Clothes item : loadedClothes) {
-            store.addNewClothes(item, 1);
-        }
+        Store store = fileManager.loadStoreFromFile(FILE_NAME);
 
         while (true) {
             printMenu();
@@ -38,7 +34,7 @@ public class Main {
                 case 2 -> createObject(scanner, store);
                 case 3 -> printClothes(store);
                 case 4 -> {
-                    fileManager.saveToFile(store.getClothes(), FILE_NAME);
+                    fileManager.saveStoreToFile(store, FILE_NAME);
                     System.out.println("Дані збережено у файл " + FILE_NAME + ".");
                     System.out.println("Роботу програми завершено.");
                     return;

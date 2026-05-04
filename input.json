@@ -6,9 +6,7 @@
     "color": "Чорний",
     "material": "Вовна",
     "price": 399.0,
-    "hasPockets": false,
-    "hasHood": false,
-    "formal": false
+    "quantity": 4
   },
   {
     "type": "PANTS",
@@ -17,9 +15,8 @@
     "color": "Синій",
     "material": "Денім",
     "price": 1299.0,
-    "hasPockets": true,
-    "hasHood": false,
-    "formal": false
+    "quantity": 2,
+    "hasPockets": true
   },
   {
     "type": "SHIRTS",
@@ -28,10 +25,8 @@
     "color": "Білий",
     "material": "Бавовна",
     "price": 899.0,
-    "hasPockets": false,
-    "sleeveType": "довгий",
-    "hasHood": false,
-    "formal": false
+    "quantity": 5,
+    "sleeveType": "довгий"
   },
   {
     "type": "JACKETS",
@@ -40,10 +35,9 @@
     "color": "Чорний",
     "material": "Поліестер",
     "price": 2499.0,
-    "hasPockets": false,
+    "quantity": 3,
     "hasHood": true,
-    "insulationType": "синтепон",
-    "formal": false
+    "insulationType": "синтепон"
   },
   {
     "type": "DRESSES",
@@ -52,20 +46,8 @@
     "color": "Червоний",
     "material": "Шовк",
     "price": 1899.0,
-    "hasPockets": false,
-    "hasHood": false,
+    "quantity": 1,
     "lengthType": "міді",
     "formal": true
-  },
-  {
-    "type": "PANTS",
-    "name": "бріджи",
-    "size": "XS",
-    "color": "білий",
-    "material": "бавовна",
-    "price": 2.999,
-    "hasPockets": true,
-    "hasHood": false,
-    "formal": false
   }
 ]
