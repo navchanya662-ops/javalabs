@@ -30,15 +30,16 @@ public class Main {
             int choice = readMenuChoice(scanner);
 
             switch (choice) {
-                case 1 -> createObject(scanner, clothes);
-                case 2 -> printClothes(clothes);
-                case 3 -> {
+                case 1 -> searchObject(scanner, clothes);
+                case 2 -> createObject(scanner, clothes);
+                case 3 -> printClothes(clothes);
+                case 4 -> {
                     fileManager.saveToFile(clothes, FILE_NAME);
                     System.out.println("Дані збережено у файл " + FILE_NAME + ".");
                     System.out.println("Роботу програми завершено.");
                     return;
                 }
-                default -> System.out.println("Оберіть пункт меню від 1 до 3.");
+                default -> System.out.println("Оберіть пункт меню від 1 до 4.");
             }
         }
     }
@@ -48,10 +49,24 @@ public class Main {
      */
     private static void printMenu() {
         System.out.println("\nМеню:");
-        System.out.println("1. Створити новий об'єкт");
-        System.out.println("2. Вивести інформацію про всі об'єкти");
-        System.out.println("3. Завершити роботу програми");
+        System.out.println("1. Пошук об'єкта");
+        System.out.println("2. Створити новий об'єкт");
+        System.out.println("3. Вивести інформацію про всі об'єкти");
+        System.out.println("4. Завершити роботу програми");
         System.out.print("Оберіть пункт меню: ");
+    }
+
+    /**
+     * Виводить підменю пошуку об'єктів.
+     */
+    private static void printSearchMenu() {
+        System.out.println("\nОберіть критерій пошуку:");
+        System.out.println("1. Пошук за назвою");
+        System.out.println("2. Пошук за розміром");
+        System.out.println("3. Пошук за кольором");
+        System.out.println("4. Пошук за типом об'єкта");
+        System.out.println("0. Повернутися до головного меню");
+        System.out.print("Ваш вибір: ");
     }
 
     /**
@@ -66,6 +81,189 @@ public class Main {
         System.out.println("5. Сукня");
         System.out.println("0. Повернутися до головного меню");
         System.out.print("Ваш вибір: ");
+    }
+
+    /**
+     * Обробляє підменю пошуку об'єкта.
+     *
+     * @param scanner об'єкт для зчитування введення
+     * @param clothes список елементів одягу
+     */
+    private static void searchObject(Scanner scanner, ArrayList<Clothes> clothes) {
+        printSearchMenu();
+        int choice = readSearchChoice(scanner);
+
+        switch (choice) {
+            case 0 -> System.out.println("Повернення до головного меню.");
+            case 1 -> searchByName(scanner, clothes);
+            case 2 -> searchBySize(scanner, clothes);
+            case 3 -> searchByColor(scanner, clothes);
+            case 4 -> searchByType(scanner, clothes);
+            default -> System.out.println("Оберіть пункт підменю від 0 до 4.");
+        }
+    }
+
+    /**
+     * Шукає елементи одягу за назвою.
+     *
+     * @param scanner об'єкт для зчитування введення
+     * @param clothes список елементів одягу
+     */
+    private static void searchByName(Scanner scanner, ArrayList<Clothes> clothes) {
+        System.out.print("Введіть назву для пошуку: ");
+        String name = readNonBlankLine(scanner);
+        printSearchResults(findByName(clothes, name));
+    }
+
+    /**
+     * Шукає елементи одягу за розміром.
+     *
+     * @param scanner об'єкт для зчитування введення
+     * @param clothes список елементів одягу
+     */
+    private static void searchBySize(Scanner scanner, ArrayList<Clothes> clothes) {
+        System.out.print("Введіть розмір для пошуку (" + getAvailableSizes() + "): ");
+        ClothesSize size = readClothesSize(scanner);
+        printSearchResults(findBySize(clothes, size));
+    }
+
+    /**
+     * Шукає елементи одягу за кольором.
+     *
+     * @param scanner об'єкт для зчитування введення
+     * @param clothes список елементів одягу
+     */
+    private static void searchByColor(Scanner scanner, ArrayList<Clothes> clothes) {
+        System.out.print("Введіть колір для пошуку: ");
+        String color = readNonBlankLine(scanner);
+        printSearchResults(findByColor(clothes, color));
+    }
+
+    /**
+     * Шукає елементи одягу за типом об'єкта.
+     *
+     * @param scanner об'єкт для зчитування введення
+     * @param clothes список елементів одягу
+     */
+    private static void searchByType(Scanner scanner, ArrayList<Clothes> clothes) {
+        printTypeSearchMenu();
+        int choice = readTypeSearchChoice(scanner);
+        if (choice == 0) {
+            System.out.println("Повернення до підменю пошуку.");
+            return;
+        }
+
+        printSearchResults(findByType(clothes, choice));
+    }
+
+    /**
+     * Повертає елементи одягу, назва яких містить заданий текст.
+     *
+     * @param clothes список елементів одягу
+     * @param name текст для пошуку в назві
+     * @return список знайдених елементів одягу
+     */
+    static ArrayList<Clothes> findByName(ArrayList<Clothes> clothes, String name) {
+        String searchValue = name.toLowerCase();
+        ArrayList<Clothes> results = new ArrayList<>();
+
+        for (Clothes item : clothes) {
+            if (item.getName().toLowerCase().contains(searchValue)) {
+                results.add(item);
+            }
+        }
+
+        return results;
+    }
+
+    /**
+     * Повертає елементи одягу із заданим розміром.
+     *
+     * @param clothes список елементів одягу
+     * @param size розмір для пошуку
+     * @return список знайдених елементів одягу
+     */
+    static ArrayList<Clothes> findBySize(ArrayList<Clothes> clothes, ClothesSize size) {
+        ArrayList<Clothes> results = new ArrayList<>();
+
+        for (Clothes item : clothes) {
+            if (item.getSize() == size) {
+                results.add(item);
+            }
+        }
+
+        return results;
+    }
+
+    /**
+     * Повертає елементи одягу, колір яких містить заданий текст.
+     *
+     * @param clothes список елементів одягу
+     * @param color текст для пошуку в кольорі
+     * @return список знайдених елементів одягу
+     */
+    static ArrayList<Clothes> findByColor(ArrayList<Clothes> clothes, String color) {
+        String searchValue = color.toLowerCase();
+        ArrayList<Clothes> results = new ArrayList<>();
+
+        for (Clothes item : clothes) {
+            if (item.getColor().toLowerCase().contains(searchValue)) {
+                results.add(item);
+            }
+        }
+
+        return results;
+    }
+
+    /**
+     * Повертає елементи одягу заданого типу.
+     *
+     * @param clothes список елементів одягу
+     * @param choice номер типу в меню
+     * @return список знайдених елементів одягу
+     */
+    static ArrayList<Clothes> findByType(ArrayList<Clothes> clothes, int choice) {
+        ArrayList<Clothes> results = new ArrayList<>();
+
+        for (Clothes item : clothes) {
+            if (matchesType(item, choice)) {
+                results.add(item);
+            }
+        }
+
+        return results;
+    }
+
+    /**
+     * Виводить підменю вибору типу об'єкта для пошуку.
+     */
+    private static void printTypeSearchMenu() {
+        System.out.println("\nОберіть тип об'єкта:");
+        System.out.println("1. Звичайний одяг");
+        System.out.println("2. Штани");
+        System.out.println("3. Сорочка");
+        System.out.println("4. Куртка");
+        System.out.println("5. Сукня");
+        System.out.println("0. Повернутися до підменю пошуку");
+        System.out.print("Ваш вибір: ");
+    }
+
+    /**
+     * Перевіряє, чи відповідає об'єкт обраному типу.
+     *
+     * @param item елемент одягу
+     * @param choice номер типу в меню
+     * @return true, якщо об'єкт відповідає обраному типу
+     */
+    static boolean matchesType(Clothes item, int choice) {
+        return switch (choice) {
+            case 1 -> item.getClass() == Clothes.class;
+            case 2 -> item instanceof Pants;
+            case 3 -> item instanceof Shirts;
+            case 4 -> item instanceof Jackets;
+            case 5 -> item instanceof Dresses;
+            default -> false;
+        };
     }
 
     /**
@@ -282,6 +480,25 @@ public class Main {
     }
 
     /**
+     * Виводить результати пошуку.
+     *
+     * @param results знайдені елементи одягу
+     */
+    private static void printSearchResults(ArrayList<Clothes> results) {
+        if (results.isEmpty()) {
+            System.out.println("За заданим критерієм нічого не знайдено.");
+            return;
+        }
+
+        System.out.println("\nРезультати пошуку:");
+        int number = 1;
+        for (Clothes item : results) {
+            System.out.println(number + ". " + item);
+            number++;
+        }
+    }
+
+    /**
      * Створює копію існуючого елемента одягу та додає її до списку.
      *
      * @param scanner об'єкт для зчитування введення
@@ -302,7 +519,7 @@ public class Main {
     }
 
     /**
-     * Зчитує номер пункту меню та перевіряє, що він знаходиться в межах від 1 до 3.
+     * Зчитує номер пункту меню та перевіряє, що він знаходиться в межах від 1 до 4.
      *
      * @param scanner об'єкт для зчитування введення
      * @return коректний номер пункту меню
@@ -312,12 +529,52 @@ public class Main {
             String input = scanner.nextLine().trim();
             try {
                 int value = Integer.parseInt(input);
-                if (value >= 1 && value <= 3) {
+                if (value >= 1 && value <= 4) {
                     return value;
                 }
             } catch (NumberFormatException ignored) {
             }
-            System.out.print("Введіть номер пункту меню від 1 до 3: ");
+            System.out.print("Введіть номер пункту меню від 1 до 4: ");
+        }
+    }
+
+    /**
+     * Зчитує номер пункту підменю пошуку.
+     *
+     * @param scanner об'єкт для зчитування введення
+     * @return коректний номер пункту підменю пошуку
+     */
+    private static int readSearchChoice(Scanner scanner) {
+        while (true) {
+            String input = scanner.nextLine().trim();
+            try {
+                int value = Integer.parseInt(input);
+                if (value >= 0 && value <= 4) {
+                    return value;
+                }
+            } catch (NumberFormatException ignored) {
+            }
+            System.out.print("Введіть номер пункту підменю від 0 до 4: ");
+        }
+    }
+
+    /**
+     * Зчитує номер типу об'єкта для пошуку.
+     *
+     * @param scanner об'єкт для зчитування введення
+     * @return коректний номер типу об'єкта
+     */
+    private static int readTypeSearchChoice(Scanner scanner) {
+        while (true) {
+            String input = scanner.nextLine().trim();
+            try {
+                int value = Integer.parseInt(input);
+                if (value >= 0 && value <= 5) {
+                    return value;
+                }
+            } catch (NumberFormatException ignored) {
+            }
+            System.out.print("Введіть номер типу від 0 до 5: ");
         }
     }
 
