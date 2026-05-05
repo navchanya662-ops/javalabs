@@ -2,6 +2,7 @@ package com.store;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Scanner;
 
 /**
@@ -34,7 +35,7 @@ public class Main {
                 case 1 -> searchObject(scanner, store);
                 case 2 -> createObject(scanner, store);
                 case 3 -> printClothes(store);
-                case 4 -> printSortedClothes(store);
+                case 4 -> printSortedClothes(scanner, store);
                 case 5 -> {
                     fileManager.saveStoreToFile(store, FILE_NAME);
                     System.out.println("Дані збережено у файл " + FILE_NAME + ".");
@@ -82,6 +83,18 @@ public class Main {
         System.out.println("3. Сорочка");
         System.out.println("4. Куртка");
         System.out.println("5. Сукня");
+        System.out.println("0. Повернутися до головного меню");
+        System.out.print("Ваш вибір: ");
+    }
+
+    /**
+     * Виводить підменю вибору критерію сортування.
+     */
+    private static void printSortMenu() {
+        System.out.println("\nОберіть критерій сортування:");
+        System.out.println("1. Сортувати за назвою");
+        System.out.println("2. Сортувати за ціною");
+        System.out.println("3. Сортувати за розміром");
         System.out.println("0. Повернутися до головного меню");
         System.out.print("Ваш вибір: ");
     }
@@ -499,18 +512,26 @@ public class Main {
     }
 
     /**
-     * Виводить усі елементи одягу, відсортовані за назвою.
+     * Виводить усі елементи одягу, відсортовані за обраним критерієм.
      *
+     * @param scanner об'єкт для зчитування введення
      * @param store магазин з товарами
      */
-    private static void printSortedClothes(Store store) {
+    private static void printSortedClothes(Scanner scanner, Store store) {
         if (store.isEmpty()) {
             System.out.println("Список елементів одягу порожній.");
             return;
         }
 
+        printSortMenu();
+        int choice = readSortChoice(scanner);
+        if (choice == 0) {
+            System.out.println("Повернення до головного меню.");
+            return;
+        }
+
         ArrayList<Clothes> sorted = new ArrayList<>(store.getClothes());
-        Collections.sort(sorted);
+        Collections.sort(sorted, createSortComparator(choice));
 
         System.out.println("\nВідсортовані елементи одягу:");
         int number = 1;
@@ -518,6 +539,63 @@ public class Main {
             System.out.println(number + ". " + item);
             number++;
         }
+    }
+
+    /**
+     * Повертає компаратор відповідно до вибраного критерію сортування.
+     *
+     * @param choice номер критерію сортування
+     * @return компаратор для сортування одягу
+     */
+    private static Comparator<Clothes> createSortComparator(int choice) {
+        return switch (choice) {
+            case 1 -> createNameComparator();
+            case 2 -> createPriceComparator();
+            case 3 -> createSizeComparator();
+            default -> throw new IllegalArgumentException("Невідомий критерій сортування.");
+        };
+    }
+
+    /**
+     * Створює анонімний Comparator для сортування за назвою.
+     *
+     * @return компаратор за назвою
+     */
+    static Comparator<Clothes> createNameComparator() {
+        return new Comparator<Clothes>() {
+            @Override
+            public int compare(Clothes first, Clothes second) {
+                return first.getName().compareToIgnoreCase(second.getName());
+            }
+        };
+    }
+
+    /**
+     * Створює анонімний Comparator для сортування за ціною.
+     *
+     * @return компаратор за ціною
+     */
+    static Comparator<Clothes> createPriceComparator() {
+        return new Comparator<Clothes>() {
+            @Override
+            public int compare(Clothes first, Clothes second) {
+                return Double.compare(first.getPrice(), second.getPrice());
+            }
+        };
+    }
+
+    /**
+     * Створює анонімний Comparator для сортування за розміром.
+     *
+     * @return компаратор за розміром
+     */
+    static Comparator<Clothes> createSizeComparator() {
+        return new Comparator<Clothes>() {
+            @Override
+            public int compare(Clothes first, Clothes second) {
+                return first.getSize().compareTo(second.getSize());
+            }
+        };
     }
 
     /**
@@ -576,6 +654,26 @@ public class Main {
             } catch (NumberFormatException ignored) {
             }
             System.out.print("Введіть номер пункту підменю від 0 до 4: ");
+        }
+    }
+
+    /**
+     * Зчитує номер критерію сортування.
+     *
+     * @param scanner об'єкт для зчитування введення
+     * @return коректний номер критерію сортування
+     */
+    private static int readSortChoice(Scanner scanner) {
+        while (true) {
+            String input = scanner.nextLine().trim();
+            try {
+                int value = Integer.parseInt(input);
+                if (value >= 0 && value <= 3) {
+                    return value;
+                }
+            } catch (NumberFormatException ignored) {
+            }
+            System.out.print("Введіть номер критерію від 0 до 3: ");
         }
     }
 
