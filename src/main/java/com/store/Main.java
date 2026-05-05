@@ -562,12 +562,7 @@ public class Main {
      * @return компаратор за назвою
      */
     static Comparator<Clothes> createNameComparator() {
-        return new Comparator<Clothes>() {
-            @Override
-            public int compare(Clothes first, Clothes second) {
-                return first.getName().compareToIgnoreCase(second.getName());
-            }
-        };
+        return (first, second) -> first.getName().compareToIgnoreCase(second.getName());
     }
 
     /**
@@ -576,12 +571,7 @@ public class Main {
      * @return компаратор за ціною
      */
     static Comparator<Clothes> createPriceComparator() {
-        return new Comparator<Clothes>() {
-            @Override
-            public int compare(Clothes first, Clothes second) {
-                return Double.compare(first.getPrice(), second.getPrice());
-            }
-        };
+        return (first, second) -> Double.compare(first.getPrice(), second.getPrice());
     }
 
     /**
@@ -590,12 +580,7 @@ public class Main {
      * @return компаратор за розміром
      */
     static Comparator<Clothes> createSizeComparator() {
-        return new Comparator<Clothes>() {
-            @Override
-            public int compare(Clothes first, Clothes second) {
-                return first.getSize().compareTo(second.getSize());
-            }
-        };
+        return (first, second) -> first.getSize().compareTo(second.getSize());
     }
 
     /**
