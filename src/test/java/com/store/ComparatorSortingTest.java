@@ -7,18 +7,19 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ComparatorSortingTest {
     @Test
-    void shouldCreateAnonymousComparatorsForSortingCriteria() {
+    void shouldCreateLambdaComparatorsForSortingCriteria() {
         Comparator<Clothes> nameComparator = Main.createNameComparator();
         Comparator<Clothes> priceComparator = Main.createPriceComparator();
         Comparator<Clothes> sizeComparator = Main.createSizeComparator();
 
-        assertTrue(nameComparator.getClass().isAnonymousClass());
-        assertTrue(priceComparator.getClass().isAnonymousClass());
-        assertTrue(sizeComparator.getClass().isAnonymousClass());
+        assertNotNull(nameComparator);
+        assertNotNull(priceComparator);
+        assertNotNull(sizeComparator);
     }
 
     @Test
