@@ -2,7 +2,12 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-.kotlin
+
+### Maven ###
+.mvn/timing.properties
+
+### Database config ###
+db.properties
 
 ### IntelliJ IDEA ###
 .idea/
@@ -19,9 +24,9 @@ target/
 .classpath
 .factorypath
 .project
-.settings
+.settings/
 .springBeans
-.sts4-cache
+.sts4-cache/
 
 ### NetBeans ###
 /nbproject/private/
@@ -36,5 +41,9 @@ build/
 ### VS Code ###
 .vscode/
 
-### Mac OS ###
+### OS ###
 .DS_Store
+Thumbs.db
+
+### Logs ###
+*.log
