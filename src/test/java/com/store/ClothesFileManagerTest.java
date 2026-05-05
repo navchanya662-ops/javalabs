@@ -32,7 +32,7 @@ class ClothesFileManagerTest {
         ArrayList<Clothes> clothes = fileManager.loadFromFile(file.toString());
 
         assertEquals(5, clothes.size());
-        assertTrue(clothes.get(0) instanceof Clothes);
+        assertTrue(clothes.get(0) instanceof BasicClothes);
         assertTrue(clothes.get(1) instanceof Pants);
         assertTrue(clothes.get(2) instanceof Shirts);
         assertTrue(clothes.get(3) instanceof Jackets);
@@ -71,7 +71,7 @@ class ClothesFileManagerTest {
         ArrayList<Clothes> loaded = fileManager.loadFromFile(file.toString());
 
         assertEquals(5, loaded.size());
-        assertTrue(loaded.get(0) instanceof Clothes);
+        assertTrue(loaded.get(0) instanceof BasicClothes);
         assertTrue(loaded.get(1) instanceof Pants);
         assertTrue(loaded.get(2) instanceof Shirts);
         assertTrue(loaded.get(3) instanceof Jackets);

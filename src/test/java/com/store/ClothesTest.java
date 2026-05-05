@@ -2,7 +2,9 @@ package com.store;
 
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
@@ -10,6 +12,63 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ClothesTest {
+    @Test
+    void shouldCreateBasicClothesAsConcreteClothes() {
+        Clothes clothes = new BasicClothes("Футболка", ClothesSize.M, "Білий", "Бавовна", 499.99);
+
+        assertTrue(clothes instanceof BasicClothes);
+        assertTrue(clothes instanceof Clothes);
+        assertTrue(clothes.toString().contains("Футболка"));
+    }
+
+    @Test
+    void shouldDeclareClothesAsAbstractClass() {
+        assertTrue(Modifier.isAbstract(Clothes.class.getModifiers()));
+    }
+
+    @Test
+    void shouldCompareClothesByNameIgnoringCase() {
+        Clothes first = new BasicClothes("брюки", ClothesSize.M, "Чорний", "Бавовна", 799.0);
+        Clothes second = new BasicClothes("Куртка", ClothesSize.L, "Синій", "Поліестер", 1499.0);
+
+        assertTrue(first.compareTo(second) < 0);
+        assertEquals(0, first.compareTo(new BasicClothes("БРЮКИ", ClothesSize.S, "Сірий", "Льон", 699.0)));
+    }
+
+    @Test
+    void shouldSortMultipleClothesByName() {
+        ArrayList<Clothes> clothes = new ArrayList<>();
+        clothes.add(new Jackets("Куртка", ClothesSize.XL, "Чорний", "Поліестер", 2499.0, true, "синтепон"));
+        clothes.add(new BasicClothes("Шапка", ClothesSize.S, "Чорний", "Вовна", 399.0));
+        clothes.add(new Shirts("Сорочка", ClothesSize.M, "Білий", "Бавовна", 899.0, "довгий"));
+
+        Collections.sort(clothes);
+
+        assertEquals("Куртка", clothes.get(0).getName());
+        assertEquals("Сорочка", clothes.get(1).getName());
+        assertEquals("Шапка", clothes.get(2).getName());
+    }
+
+    @Test
+    void shouldSortSingleClothesWithoutChanges() {
+        ArrayList<Clothes> clothes = new ArrayList<>();
+        clothes.add(new BasicClothes("Шапка", ClothesSize.S, "Чорний", "Вовна", 399.0));
+
+        Collections.sort(clothes);
+
+        assertEquals(1, clothes.size());
+        assertEquals("Шапка", clothes.get(0).getName());
+    }
+
+    @Test
+    void shouldSortEmptyClothesListWithoutErrors() {
+        ArrayList<Clothes> clothes = new ArrayList<>();
+
+        Collections.sort(clothes);
+
+        assertTrue(clothes.isEmpty());
+    }
+
     @Test
     void shouldThrowExceptionWhenInvalidValueInSetter() {
         Clothes clothes = new BasicClothes("Футболка", ClothesSize.M, "Білий", "Бавовна", 499.99);
