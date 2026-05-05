@@ -58,6 +58,41 @@ public class ClothesFileManager {
     }
 
     /**
+     * Завантажує магазин з JSON-файлу.
+     *
+     * @param fileName назва файлу для зчитування
+     * @return магазин з товарами та їх кількістю
+     */
+    public Store loadStoreFromFile(String fileName) {
+        Store store = new Store();
+
+        try (FileReader reader = new FileReader(fileName)) {
+            Type listType = new TypeToken<ArrayList<ClothesRecord>>() {
+            }.getType();
+            ArrayList<ClothesRecord> records = gson.fromJson(reader, listType);
+
+            if (records == null) {
+                return store;
+            }
+
+            for (int i = 0; i < records.size(); i++) {
+                try {
+                    ClothesRecord record = records.get(i);
+                    store.addNewClothes(createClothes(record), getQuantity(record));
+                } catch (IllegalArgumentException exception) {
+                    System.out.println("Некоректний запис " + (i + 1) + ": " + exception.getMessage());
+                }
+            }
+        } catch (IOException exception) {
+            System.out.println("Помилка читання файлу: " + exception.getMessage());
+        } catch (JsonSyntaxException exception) {
+            System.out.println("Помилка обробки JSON: " + exception.getMessage());
+        }
+
+        return store;
+    }
+
+    /**
      * Зберігає елементи одягу у JSON-файл.
      *
      * @param clothes список елементів одягу
@@ -66,7 +101,27 @@ public class ClothesFileManager {
     public void saveToFile(ArrayList<Clothes> clothes, String fileName) {
         ArrayList<ClothesRecord> records = new ArrayList<>();
         for (Clothes item : clothes) {
-            records.add(createRecord(item));
+            records.add(createRecord(item, 1));
+        }
+
+        try (FileWriter writer = new FileWriter(fileName)) {
+            gson.toJson(records, writer);
+        } catch (IOException exception) {
+            System.out.println("Помилка запису файлу: " + exception.getMessage());
+        }
+    }
+
+    /**
+     * Зберігає магазин у JSON-файл.
+     *
+     * @param store магазин з товарами та їх кількістю
+     * @param fileName назва файлу для запису
+     */
+    public void saveStoreToFile(Store store, String fileName) {
+        ArrayList<ClothesRecord> records = new ArrayList<>();
+        ArrayList<Clothes> clothes = store.getClothes();
+        for (int i = 0; i < clothes.size(); i++) {
+            records.add(createRecord(clothes.get(i), store.getQuantity(i)));
         }
 
         try (FileWriter writer = new FileWriter(fileName)) {
@@ -142,13 +197,14 @@ public class ClothesFileManager {
      * @param item елемент одягу
      * @return JSON-запис
      */
-    private ClothesRecord createRecord(Clothes item) {
+    private ClothesRecord createRecord(Clothes item, int quantity) {
         ClothesRecord record = new ClothesRecord();
         record.name = item.getName();
         record.size = item.getSize().name();
         record.color = item.getColor();
         record.material = item.getMaterial();
         record.price = item.getPrice();
+        record.quantity = quantity;
 
         if (item instanceof Pants pants) {
             record.type = "PANTS";
@@ -169,6 +225,22 @@ public class ClothesFileManager {
         }
 
         return record;
+    }
+
+    /**
+     * Повертає кількість товару із JSON-запису.
+     *
+     * @param record JSON-запис
+     * @return кількість товару
+     */
+    private int getQuantity(ClothesRecord record) {
+        if (record.quantity == null) {
+            return 1;
+        }
+        if (record.quantity <= 0) {
+            throw new IllegalArgumentException("кількість повинна бути більшою за 0");
+        }
+        return record.quantity;
     }
 
     /**
@@ -209,6 +281,7 @@ public class ClothesFileManager {
         private String color;
         private String material;
         private double price;
+        private Integer quantity;
         private boolean hasPockets;
         private String sleeveType;
         private boolean hasHood;
