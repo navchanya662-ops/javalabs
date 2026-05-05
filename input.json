@@ -6,7 +6,10 @@
     "color": "Чорний",
     "material": "Вовна",
     "price": 399.0,
-    "quantity": 4
+    "quantity": 4,
+    "hasPockets": false,
+    "hasHood": false,
+    "formal": false
   },
   {
     "type": "PANTS",
@@ -16,7 +19,9 @@
     "material": "Денім",
     "price": 1299.0,
     "quantity": 2,
-    "hasPockets": true
+    "hasPockets": true,
+    "hasHood": false,
+    "formal": false
   },
   {
     "type": "SHIRTS",
@@ -26,7 +31,10 @@
     "material": "Бавовна",
     "price": 899.0,
     "quantity": 5,
-    "sleeveType": "довгий"
+    "hasPockets": false,
+    "sleeveType": "довгий",
+    "hasHood": false,
+    "formal": false
   },
   {
     "type": "JACKETS",
@@ -36,8 +44,10 @@
     "material": "Поліестер",
     "price": 2499.0,
     "quantity": 3,
+    "hasPockets": false,
     "hasHood": true,
-    "insulationType": "синтепон"
+    "insulationType": "синтепон",
+    "formal": false
   },
   {
     "type": "DRESSES",
@@ -47,6 +57,8 @@
     "material": "Шовк",
     "price": 1899.0,
     "quantity": 1,
+    "hasPockets": false,
+    "hasHood": false,
     "lengthType": "міді",
     "formal": true
   }
