@@ -13,7 +13,7 @@ class StoreTest {
     void shouldAddNewClothesWithQuantity() {
         Store store = new Store();
 
-        store.addNewClothes(new Clothes("Шапка", ClothesSize.S, "Чорний", "Вовна", 399.0), 3);
+        store.addNewClothes(new BasicClothes("Шапка", ClothesSize.S, "Чорний", "Вовна", 399.0), 3);
 
         assertEquals(1, store.getTotalUniqueItems());
         assertEquals(3, store.getQuantity(0));
@@ -22,10 +22,10 @@ class StoreTest {
     @Test
     void shouldIncreaseQuantityWhenSameClothesAlreadyExists() {
         Store store = new Store();
-        Clothes hat = new Clothes("Шапка", ClothesSize.S, "Чорний", "Вовна", 399.0);
+        Clothes hat = new BasicClothes("Шапка", ClothesSize.S, "Чорний", "Вовна", 399.0);
 
         store.addNewClothes(hat, 2);
-        store.addNewClothes(new Clothes("Шапка", ClothesSize.S, "Чорний", "Вовна", 399.0), 5);
+        store.addNewClothes(new BasicClothes("Шапка", ClothesSize.S, "Чорний", "Вовна", 399.0), 5);
 
         assertEquals(1, store.getTotalUniqueItems());
         assertEquals(7, store.getQuantity(0));
@@ -34,7 +34,7 @@ class StoreTest {
     @Test
     void shouldThrowExceptionWhenQuantityIsNotPositive() {
         Store store = new Store();
-        Clothes hat = new Clothes("Шапка", ClothesSize.S, "Чорний", "Вовна", 399.0);
+        Clothes hat = new BasicClothes("Шапка", ClothesSize.S, "Чорний", "Вовна", 399.0);
 
         assertThrows(IllegalArgumentException.class, () -> store.addNewClothes(hat, 0));
         assertThrows(IllegalArgumentException.class, () -> store.addNewClothes(hat, -1));
@@ -84,7 +84,7 @@ class StoreTest {
 
     private Store createSampleStore() {
         Store store = new Store();
-        store.addNewClothes(new Clothes("Шапка", ClothesSize.S, "Чорний", "Вовна", 399.0), 4);
+        store.addNewClothes(new BasicClothes("Шапка", ClothesSize.S, "Чорний", "Вовна", 399.0), 4);
         store.addNewClothes(new Pants("Джинси", ClothesSize.L, "Синій", "Денім", 1299.0, true), 2);
         store.addNewClothes(new Shirts("Сорочка", ClothesSize.M, "Білий", "Бавовна", 899.0, "довгий"), 5);
         store.addNewClothes(new Jackets("Куртка", ClothesSize.XL, "Чорний", "Поліестер", 2499.0, true, "синтепон"), 3);

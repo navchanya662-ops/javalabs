@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ClothesTest {
     @Test
     void shouldThrowExceptionWhenInvalidValueInSetter() {
-        Clothes clothes = new Clothes("Футболка", ClothesSize.M, "Білий", "Бавовна", 499.99);
+        Clothes clothes = new BasicClothes("Футболка", ClothesSize.M, "Білий", "Бавовна", 499.99);
 
         assertThrows(IllegalArgumentException.class, () -> clothes.setPrice(-1));
     }
@@ -20,14 +20,14 @@ class ClothesTest {
     @Test
     void shouldThrowExceptionWhenInvalidConstructorData() {
         assertThrows(IllegalArgumentException.class, () ->
-                new Clothes("", ClothesSize.M, "Білий", "Бавовна", 499.99)
+                new BasicClothes("", ClothesSize.M, "Білий", "Бавовна", 499.99)
         );
     }
 
     @Test
     void shouldCreateEqualCopyWhenCopyConstructorUsed() {
-        Clothes original = new Clothes("Футболка", ClothesSize.M, "Білий", "Бавовна", 499.99);
-        Clothes copy = new Clothes(original);
+        Clothes original = new BasicClothes("Футболка", ClothesSize.M, "Білий", "Бавовна", 499.99);
+        Clothes copy = new BasicClothes(original);
 
         assertEquals(original, copy);
         assertNotSame(original, copy);
@@ -35,7 +35,7 @@ class ClothesTest {
 
     @Test
     void shouldThrowExceptionWhenCopiedObjectIsNull() {
-        assertThrows(IllegalArgumentException.class, () -> new Clothes(null));
+        assertThrows(IllegalArgumentException.class, () -> new BasicClothes(null));
     }
 
     @Test
@@ -58,7 +58,7 @@ class ClothesTest {
     void shouldStoreDifferentDerivedTypesInOneClothesList() {
         ArrayList<Clothes> clothes = new ArrayList<>();
 
-        clothes.add(new Clothes("Шапка", ClothesSize.S, "Чорний", "Вовна", 399.0));
+        clothes.add(new BasicClothes("Шапка", ClothesSize.S, "Чорний", "Вовна", 399.0));
         clothes.add(new Pants("Штани", ClothesSize.L, "Сірий", "Бавовна", 1099.0, false));
         clothes.add(new Shirts("Сорочка", ClothesSize.M, "Білий", "Льон", 999.0, "короткий"));
         clothes.add(new Jackets("Куртка", ClothesSize.XL, "Чорний", "Поліестер", 2499.0, true, "синтепон"));

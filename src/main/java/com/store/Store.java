@@ -162,7 +162,7 @@ public class Store {
      */
     private boolean matchesType(Clothes item, int choice) {
         return switch (choice) {
-            case 1 -> item.getClass() == Clothes.class;
+            case 1 -> item.getClass() == BasicClothes.class;
             case 2 -> item instanceof Pants;
             case 3 -> item instanceof Shirts;
             case 4 -> item instanceof Jackets;

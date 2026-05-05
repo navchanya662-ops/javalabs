@@ -60,7 +60,7 @@ class ClothesFileManagerTest {
     void shouldSaveAndLoadAllSupportedTypesAsJson() {
         Path file = tempDir.resolve("input.json");
         ArrayList<Clothes> original = new ArrayList<>();
-        original.add(new Clothes("Шапка", ClothesSize.S, "Чорний", "Вовна", 399.0));
+        original.add(new BasicClothes("Шапка", ClothesSize.S, "Чорний", "Вовна", 399.0));
         original.add(new Pants("Джинси", ClothesSize.L, "Синій", "Денім", 1299.0, true));
         original.add(new Shirts("Сорочка", ClothesSize.M, "Білий", "Бавовна", 899.0, "довгий"));
         original.add(new Jackets("Куртка", ClothesSize.XL, "Чорний", "Поліестер", 2499.0, true, "синтепон"));
@@ -83,7 +83,7 @@ class ClothesFileManagerTest {
     void shouldSaveAndLoadStoreWithQuantitiesAsJson() {
         Path file = tempDir.resolve("input.json");
         Store original = new Store();
-        original.addNewClothes(new Clothes("Шапка", ClothesSize.S, "Чорний", "Вовна", 399.0), 4);
+        original.addNewClothes(new BasicClothes("Шапка", ClothesSize.S, "Чорний", "Вовна", 399.0), 4);
         original.addNewClothes(new Pants("Джинси", ClothesSize.L, "Синій", "Денім", 1299.0, true), 2);
 
         ClothesFileManager fileManager = new ClothesFileManager();

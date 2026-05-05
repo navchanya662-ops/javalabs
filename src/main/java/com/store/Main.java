@@ -257,7 +257,7 @@ public class Main {
      */
     static boolean matchesType(Clothes item, int choice) {
         return switch (choice) {
-            case 1 -> item.getClass() == Clothes.class;
+            case 1 -> item.getClass() == BasicClothes.class;
             case 2 -> item instanceof Pants;
             case 3 -> item instanceof Shirts;
             case 4 -> item instanceof Jackets;
@@ -314,7 +314,7 @@ public class Main {
             System.out.print("Кількість: ");
             int quantity = readPositiveInt(scanner);
 
-            store.addNewClothes(new Clothes(name, size, color, material, price), quantity);
+            store.addNewClothes(new BasicClothes(name, size, color, material, price), quantity);
             System.out.println("Об'єкт успішно створено.");
         } catch (IllegalArgumentException exception) {
             System.out.println("Помилка створення об'єкта: " + exception.getMessage());

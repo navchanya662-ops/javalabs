@@ -5,7 +5,7 @@ import java.util.Objects;
 /**
  * Описує один елемент одягу з назвою, розміром, кольором, матеріалом і ціною.
  */
-public class Clothes {
+public abstract class Clothes {
     private String name;
     private ClothesSize size;
     private String color;
