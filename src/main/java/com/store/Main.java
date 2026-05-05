@@ -557,45 +557,30 @@ public class Main {
     }
 
     /**
-     * Створює анонімний Comparator для сортування за назвою.
+     * Створює Comparator через lambda-вираз для сортування за назвою.
      *
      * @return компаратор за назвою
      */
     static Comparator<Clothes> createNameComparator() {
-        return new Comparator<Clothes>() {
-            @Override
-            public int compare(Clothes first, Clothes second) {
-                return first.getName().compareToIgnoreCase(second.getName());
-            }
-        };
+        return (first, second) -> first.getName().compareToIgnoreCase(second.getName());
     }
 
     /**
-     * Створює анонімний Comparator для сортування за ціною.
+     * Створює Comparator через lambda-вираз для сортування за ціною.
      *
      * @return компаратор за ціною
      */
     static Comparator<Clothes> createPriceComparator() {
-        return new Comparator<Clothes>() {
-            @Override
-            public int compare(Clothes first, Clothes second) {
-                return Double.compare(first.getPrice(), second.getPrice());
-            }
-        };
+        return (first, second) -> Double.compare(first.getPrice(), second.getPrice());
     }
 
     /**
-     * Створює анонімний Comparator для сортування за розміром.
+     * Створює Comparator через lambda-вираз для сортування за розміром.
      *
      * @return компаратор за розміром
      */
     static Comparator<Clothes> createSizeComparator() {
-        return new Comparator<Clothes>() {
-            @Override
-            public int compare(Clothes first, Clothes second) {
-                return first.getSize().compareTo(second.getSize());
-            }
-        };
+        return (first, second) -> first.getSize().compareTo(second.getSize());
     }
 
     /**
