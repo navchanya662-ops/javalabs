@@ -33,7 +33,7 @@ public class Main {
 
             switch (choice) {
                 case 1 -> searchObject(scanner, store);
-                case 2 -> createObject(scanner, store);
+                case 2 -> createObject(scanner, store, databaseManager);
                 case 3 -> printClothes(store);
                 case 4 -> {
                     fileManager.saveStoreToFile(store, FILE_NAME);
@@ -294,18 +294,19 @@ public class Main {
      *
      * @param scanner об'єкт для зчитування введення
      * @param store магазин з товарами
+     * @param databaseManager менеджер бази даних
      */
-    private static void createObject(Scanner scanner, Store store) {
+    private static void createObject(Scanner scanner, Store store, DatabaseManager databaseManager) {
         printCreateObjectMenu();
         int choice = readCreateObjectChoice(scanner);
 
         switch (choice) {
             case 0 -> System.out.println("Повернення до головного меню.");
-            case 1 -> createClothes(scanner, store);
-            case 2 -> createPants(scanner, store);
-            case 3 -> createShirts(scanner, store);
-            case 4 -> createJackets(scanner, store);
-            case 5 -> createDresses(scanner, store);
+            case 1 -> createClothes(scanner, store, databaseManager);
+            case 2 -> createPants(scanner, store, databaseManager);
+            case 3 -> createShirts(scanner, store, databaseManager);
+            case 4 -> createJackets(scanner, store, databaseManager);
+            case 5 -> createDresses(scanner, store, databaseManager);
             default -> System.out.println("Оберіть пункт підменю від 0 до 5.");
         }
     }
@@ -315,8 +316,9 @@ public class Main {
      *
      * @param scanner об'єкт для зчитування введення
      * @param store магазин з товарами
+     * @param databaseManager менеджер бази даних
      */
-    private static void createClothes(Scanner scanner, Store store) {
+    private static void createClothes(Scanner scanner, Store store, DatabaseManager databaseManager) {
         try {
             System.out.println("\nНовий елемент одягу");
             System.out.print("Назва: ");
@@ -337,7 +339,9 @@ public class Main {
             System.out.print("Кількість: ");
             int quantity = readPositiveInt(scanner);
 
-            store.addNewClothes(new Clothes(name, size, color, material, price), quantity);
+            Clothes item = new Clothes(name, size, color, material, price);
+            store.addNewClothes(item, quantity);
+            insertCreatedClothes(databaseManager, item, quantity);
             System.out.println("Об'єкт успішно створено.");
         } catch (IllegalArgumentException exception) {
             System.out.println("Помилка створення об'єкта: " + exception.getMessage());
@@ -349,8 +353,9 @@ public class Main {
      *
      * @param scanner об'єкт для зчитування введення
      * @param store магазин з товарами
+     * @param databaseManager менеджер бази даних
      */
-    private static void createPants(Scanner scanner, Store store) {
+    private static void createPants(Scanner scanner, Store store, DatabaseManager databaseManager) {
         try {
             System.out.println("\nНові штани");
             System.out.print("Назва: ");
@@ -374,7 +379,9 @@ public class Main {
             System.out.print("Кількість: ");
             int quantity = readPositiveInt(scanner);
 
-            store.addNewClothes(new Pants(name, size, color, material, price, hasPockets), quantity);
+            Pants item = new Pants(name, size, color, material, price, hasPockets);
+            store.addNewClothes(item, quantity);
+            insertCreatedClothes(databaseManager, item, quantity);
             System.out.println("Штани успішно створено.");
         } catch (IllegalArgumentException exception) {
             System.out.println("Помилка створення штанів: " + exception.getMessage());
@@ -386,8 +393,9 @@ public class Main {
      *
      * @param scanner об'єкт для зчитування введення
      * @param store магазин з товарами
+     * @param databaseManager менеджер бази даних
      */
-    private static void createShirts(Scanner scanner, Store store) {
+    private static void createShirts(Scanner scanner, Store store, DatabaseManager databaseManager) {
         try {
             System.out.println("\nНова сорочка");
             System.out.print("Назва: ");
@@ -411,7 +419,9 @@ public class Main {
             System.out.print("Кількість: ");
             int quantity = readPositiveInt(scanner);
 
-            store.addNewClothes(new Shirts(name, size, color, material, price, sleeveType), quantity);
+            Shirts item = new Shirts(name, size, color, material, price, sleeveType);
+            store.addNewClothes(item, quantity);
+            insertCreatedClothes(databaseManager, item, quantity);
             System.out.println("Сорочку успішно створено.");
         } catch (IllegalArgumentException exception) {
             System.out.println("Помилка створення сорочки: " + exception.getMessage());
@@ -423,8 +433,9 @@ public class Main {
      *
      * @param scanner об'єкт для зчитування введення
      * @param store магазин з товарами
+     * @param databaseManager менеджер бази даних
      */
-    private static void createJackets(Scanner scanner, Store store) {
+    private static void createJackets(Scanner scanner, Store store, DatabaseManager databaseManager) {
         try {
             System.out.println("\nНова куртка");
             System.out.print("Назва: ");
@@ -451,7 +462,9 @@ public class Main {
             System.out.print("Кількість: ");
             int quantity = readPositiveInt(scanner);
 
-            store.addNewClothes(new Jackets(name, size, color, material, price, hasHood, insulationType), quantity);
+            Jackets item = new Jackets(name, size, color, material, price, hasHood, insulationType);
+            store.addNewClothes(item, quantity);
+            insertCreatedClothes(databaseManager, item, quantity);
             System.out.println("Куртку успішно створено.");
         } catch (IllegalArgumentException exception) {
             System.out.println("Помилка створення куртки: " + exception.getMessage());
@@ -463,8 +476,9 @@ public class Main {
      *
      * @param scanner об'єкт для зчитування введення
      * @param store магазин з товарами
+     * @param databaseManager менеджер бази даних
      */
-    private static void createDresses(Scanner scanner, Store store) {
+    private static void createDresses(Scanner scanner, Store store, DatabaseManager databaseManager) {
         try {
             System.out.println("\nНова сукня");
             System.out.print("Назва: ");
@@ -491,10 +505,25 @@ public class Main {
             System.out.print("Кількість: ");
             int quantity = readPositiveInt(scanner);
 
-            store.addNewClothes(new Dresses(name, size, color, material, price, lengthType, isFormal), quantity);
+            Dresses item = new Dresses(name, size, color, material, price, lengthType, isFormal);
+            store.addNewClothes(item, quantity);
+            insertCreatedClothes(databaseManager, item, quantity);
             System.out.println("Сукню успішно створено.");
         } catch (IllegalArgumentException exception) {
             System.out.println("Помилка створення сукні: " + exception.getMessage());
+        }
+    }
+
+    /**
+     * Зберігає створений товар у базу даних, якщо підключення налаштоване.
+     *
+     * @param databaseManager менеджер бази даних
+     * @param item створений товар
+     * @param quantity кількість товару
+     */
+    private static void insertCreatedClothes(DatabaseManager databaseManager, Clothes item, int quantity) {
+        if (databaseManager != null) {
+            databaseManager.insertClothes(item, quantity);
         }
     }
 
