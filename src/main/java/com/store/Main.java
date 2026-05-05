@@ -1,6 +1,7 @@
 package com.store;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 /**
@@ -33,13 +34,14 @@ public class Main {
                 case 1 -> searchObject(scanner, store);
                 case 2 -> createObject(scanner, store);
                 case 3 -> printClothes(store);
-                case 4 -> {
+                case 4 -> printSortedClothes(store);
+                case 5 -> {
                     fileManager.saveStoreToFile(store, FILE_NAME);
                     System.out.println("Дані збережено у файл " + FILE_NAME + ".");
                     System.out.println("Роботу програми завершено.");
                     return;
                 }
-                default -> System.out.println("Оберіть пункт меню від 1 до 4.");
+                default -> System.out.println("Оберіть пункт меню від 1 до 5.");
             }
         }
     }
@@ -52,7 +54,8 @@ public class Main {
         System.out.println("1. Пошук об'єкта");
         System.out.println("2. Створити новий об'єкт");
         System.out.println("3. Вивести інформацію про всі об'єкти");
-        System.out.println("4. Завершити роботу програми");
+        System.out.println("4. Вивести відсортовану інформацію про всі об'єкти");
+        System.out.println("5. Завершити роботу програми");
         System.out.print("Оберіть пункт меню: ");
     }
 
@@ -257,7 +260,7 @@ public class Main {
      */
     static boolean matchesType(Clothes item, int choice) {
         return switch (choice) {
-            case 1 -> item.getClass() == Clothes.class;
+            case 1 -> item.getClass() == BasicClothes.class;
             case 2 -> item instanceof Pants;
             case 3 -> item instanceof Shirts;
             case 4 -> item instanceof Jackets;
@@ -314,7 +317,7 @@ public class Main {
             System.out.print("Кількість: ");
             int quantity = readPositiveInt(scanner);
 
-            store.addNewClothes(new Clothes(name, size, color, material, price), quantity);
+            store.addNewClothes(new BasicClothes(name, size, color, material, price), quantity);
             System.out.println("Об'єкт успішно створено.");
         } catch (IllegalArgumentException exception) {
             System.out.println("Помилка створення об'єкта: " + exception.getMessage());
@@ -496,6 +499,28 @@ public class Main {
     }
 
     /**
+     * Виводить усі елементи одягу, відсортовані за назвою.
+     *
+     * @param store магазин з товарами
+     */
+    private static void printSortedClothes(Store store) {
+        if (store.isEmpty()) {
+            System.out.println("Список елементів одягу порожній.");
+            return;
+        }
+
+        ArrayList<Clothes> sorted = new ArrayList<>(store.getClothes());
+        Collections.sort(sorted);
+
+        System.out.println("\nВідсортовані елементи одягу:");
+        int number = 1;
+        for (Clothes item : sorted) {
+            System.out.println(number + ". " + item);
+            number++;
+        }
+    }
+
+    /**
      * Виводить результати пошуку.
      *
      * @param results знайдені елементи одягу
@@ -515,7 +540,7 @@ public class Main {
     }
 
     /**
-     * Зчитує номер пункту меню та перевіряє, що він знаходиться в межах від 1 до 4.
+     * Зчитує номер пункту меню та перевіряє, що він знаходиться в межах від 1 до 5.
      *
      * @param scanner об'єкт для зчитування введення
      * @return коректний номер пункту меню
@@ -525,12 +550,12 @@ public class Main {
             String input = scanner.nextLine().trim();
             try {
                 int value = Integer.parseInt(input);
-                if (value >= 1 && value <= 4) {
+                if (value >= 1 && value <= 5) {
                     return value;
                 }
             } catch (NumberFormatException ignored) {
             }
-            System.out.print("Введіть номер пункту меню від 1 до 4: ");
+            System.out.print("Введіть номер пункту меню від 1 до 5: ");
         }
     }
 

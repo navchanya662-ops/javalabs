@@ -32,7 +32,7 @@ class ClothesFileManagerTest {
         ArrayList<Clothes> clothes = fileManager.loadFromFile(file.toString());
 
         assertEquals(5, clothes.size());
-        assertTrue(clothes.get(0) instanceof Clothes);
+        assertTrue(clothes.get(0) instanceof BasicClothes);
         assertTrue(clothes.get(1) instanceof Pants);
         assertTrue(clothes.get(2) instanceof Shirts);
         assertTrue(clothes.get(3) instanceof Jackets);
@@ -60,7 +60,7 @@ class ClothesFileManagerTest {
     void shouldSaveAndLoadAllSupportedTypesAsJson() {
         Path file = tempDir.resolve("input.json");
         ArrayList<Clothes> original = new ArrayList<>();
-        original.add(new Clothes("Шапка", ClothesSize.S, "Чорний", "Вовна", 399.0));
+        original.add(new BasicClothes("Шапка", ClothesSize.S, "Чорний", "Вовна", 399.0));
         original.add(new Pants("Джинси", ClothesSize.L, "Синій", "Денім", 1299.0, true));
         original.add(new Shirts("Сорочка", ClothesSize.M, "Білий", "Бавовна", 899.0, "довгий"));
         original.add(new Jackets("Куртка", ClothesSize.XL, "Чорний", "Поліестер", 2499.0, true, "синтепон"));
@@ -71,7 +71,7 @@ class ClothesFileManagerTest {
         ArrayList<Clothes> loaded = fileManager.loadFromFile(file.toString());
 
         assertEquals(5, loaded.size());
-        assertTrue(loaded.get(0) instanceof Clothes);
+        assertTrue(loaded.get(0) instanceof BasicClothes);
         assertTrue(loaded.get(1) instanceof Pants);
         assertTrue(loaded.get(2) instanceof Shirts);
         assertTrue(loaded.get(3) instanceof Jackets);
@@ -83,7 +83,7 @@ class ClothesFileManagerTest {
     void shouldSaveAndLoadStoreWithQuantitiesAsJson() {
         Path file = tempDir.resolve("input.json");
         Store original = new Store();
-        original.addNewClothes(new Clothes("Шапка", ClothesSize.S, "Чорний", "Вовна", 399.0), 4);
+        original.addNewClothes(new BasicClothes("Шапка", ClothesSize.S, "Чорний", "Вовна", 399.0), 4);
         original.addNewClothes(new Pants("Джинси", ClothesSize.L, "Синій", "Денім", 1299.0, true), 2);
 
         ClothesFileManager fileManager = new ClothesFileManager();

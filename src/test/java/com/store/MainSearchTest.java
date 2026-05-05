@@ -58,7 +58,7 @@ class MainSearchTest {
         ArrayList<Clothes> results = Main.findByType(clothes, 1);
 
         assertEquals(1, results.size());
-        assertEquals(Clothes.class, results.get(0).getClass());
+        assertEquals(BasicClothes.class, results.get(0).getClass());
     }
 
     @Test
@@ -84,7 +84,7 @@ class MainSearchTest {
 
     private ArrayList<Clothes> createSampleClothes() {
         ArrayList<Clothes> clothes = new ArrayList<>();
-        clothes.add(new Clothes("Шапка", ClothesSize.S, "Чорний", "Вовна", 399.0));
+        clothes.add(new BasicClothes("Шапка", ClothesSize.S, "Чорний", "Вовна", 399.0));
         clothes.add(new Pants("Джинси", ClothesSize.L, "Синій", "Денім", 1299.0, true));
         clothes.add(new Shirts("Сорочка", ClothesSize.M, "Білий", "Бавовна", 899.0, "довгий"));
         clothes.add(new Jackets("Куртка", ClothesSize.XL, "Чорний", "Поліестер", 2499.0, true, "синтепон"));

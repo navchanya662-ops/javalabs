@@ -146,7 +146,7 @@ public class ClothesFileManager {
         ClothesSize size = parseSize(record.size);
 
         return switch (type) {
-            case "CLOTHES" -> new Clothes(
+            case "CLOTHES" -> new BasicClothes(
                     requireText(record.name, "name"),
                     size,
                     requireText(record.color, "color"),

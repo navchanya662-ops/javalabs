@@ -5,7 +5,7 @@ import java.util.Objects;
 /**
  * Описує один елемент одягу з назвою, розміром, кольором, матеріалом і ціною.
  */
-public class Clothes {
+public abstract class Clothes implements Comparable<Clothes> {
     private String name;
     private ClothesSize size;
     private String color;
@@ -53,6 +53,17 @@ public class Clothes {
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * Порівнює елементи одягу за назвою без урахування регістру.
+     *
+     * @param other інший елемент одягу
+     * @return результат порівняння назв
+     */
+    @Override
+    public int compareTo(Clothes other) {
+        return getName().compareToIgnoreCase(other.getName());
     }
 
     /**
