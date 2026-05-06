@@ -69,6 +69,18 @@ public abstract class Clothes implements Comparable<Clothes>, Identifiable {
     }
 
     /**
+     * Встановлює UUID під час відновлення об'єкта зі сховища.
+     *
+     * @param uuid UUID елемента одягу
+     */
+    void setUuid(UUID uuid) {
+        if (uuid == null) {
+            throw new IllegalArgumentException("UUID не може бути null");
+        }
+        this.uuid = uuid;
+    }
+
+    /**
      * Порівнює елементи одягу за назвою без урахування регістру.
      *
      * @param other інший елемент одягу
@@ -229,6 +241,8 @@ public abstract class Clothes implements Comparable<Clothes>, Identifiable {
     @Override
     public String toString() {
         return "Одяг{"
+                + "uuid=" + uuid
+                + ", "
                 + "назва='" + name + '\''
                 + ", розмір='" + size + '\''
                 + ", колір='" + color + '\''

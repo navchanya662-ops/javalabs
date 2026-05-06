@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Scanner;
+import java.util.UUID;
 
 /**
  * Драйвер програми для створення та перегляду елементів одягу через консольне меню.
@@ -69,6 +70,7 @@ public class Main {
         System.out.println("2. Пошук за розміром");
         System.out.println("3. Пошук за кольором");
         System.out.println("4. Пошук за типом об'єкта");
+        System.out.println("5. Пошук за UUID");
         System.out.println("0. Повернутися до головного меню");
         System.out.print("Ваш вибір: ");
     }
@@ -115,7 +117,8 @@ public class Main {
             case 2 -> searchBySize(scanner, store);
             case 3 -> searchByColor(scanner, store);
             case 4 -> searchByType(scanner, store);
-            default -> System.out.println("Оберіть пункт підменю від 0 до 4.");
+            case 5 -> searchByUuid(scanner, store);
+            default -> System.out.println("Оберіть пункт підменю від 0 до 5.");
         }
     }
 
@@ -170,6 +173,30 @@ public class Main {
         }
 
         printSearchResults(store.findByType(choice));
+    }
+
+    /**
+     * Шукає елемент одягу за UUID.
+     *
+     * @param scanner об'єкт для зчитування введення
+     * @param store магазин з товарами
+     */
+    private static void searchByUuid(Scanner scanner, Store store) {
+        System.out.print("Введіть UUID для пошуку: ");
+        String input = readNonBlankLine(scanner);
+
+        try {
+            UUID uuid = UUID.fromString(input);
+            Clothes result = store.findByUuid(uuid);
+            if (result == null) {
+                System.out.println("Об'єкт із таким UUID не знайдено.");
+                return;
+            }
+            System.out.println("\nЗнайдений об'єкт:");
+            System.out.println(result);
+        } catch (IllegalArgumentException exception) {
+            System.out.println("Некоректний формат UUID.");
+        }
     }
 
     /**
@@ -633,12 +660,12 @@ public class Main {
             String input = scanner.nextLine().trim();
             try {
                 int value = Integer.parseInt(input);
-                if (value >= 0 && value <= 4) {
+                if (value >= 0 && value <= 5) {
                     return value;
                 }
             } catch (NumberFormatException ignored) {
             }
-            System.out.print("Введіть номер пункту підменю від 0 до 4: ");
+            System.out.print("Введіть номер пункту підменю від 0 до 5: ");
         }
     }
 
