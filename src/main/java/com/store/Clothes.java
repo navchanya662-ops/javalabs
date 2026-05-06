@@ -1,11 +1,13 @@
 package com.store;
 
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Описує один елемент одягу з назвою, розміром, кольором, матеріалом і ціною.
  */
-public abstract class Clothes implements Comparable<Clothes> {
+public abstract class Clothes implements Comparable<Clothes>, Identifiable {
+    private UUID uuid;
     private String name;
     private ClothesSize size;
     private String color;
@@ -23,6 +25,7 @@ public abstract class Clothes implements Comparable<Clothes> {
      * @throws IllegalArgumentException якщо текстове поле порожнє або ціна від'ємна
      */
     public Clothes(String name, ClothesSize size, String color, String material, double price) {
+        this.uuid = UUID.randomUUID();
         setName(name);
         setSize(size);
         setColor(color);
@@ -53,6 +56,28 @@ public abstract class Clothes implements Comparable<Clothes> {
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * Повертає унікальний ідентифікатор елемента одягу.
+     *
+     * @return UUID елемента одягу
+     */
+    @Override
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    /**
+     * Встановлює UUID під час відновлення об'єкта зі сховища.
+     *
+     * @param uuid UUID елемента одягу
+     */
+    void setUuid(UUID uuid) {
+        if (uuid == null) {
+            throw new IllegalArgumentException("UUID не може бути null");
+        }
+        this.uuid = uuid;
     }
 
     /**
@@ -216,6 +241,8 @@ public abstract class Clothes implements Comparable<Clothes> {
     @Override
     public String toString() {
         return "Одяг{"
+                + "uuid=" + uuid
+                + ", "
                 + "назва='" + name + '\''
                 + ", розмір='" + size + '\''
                 + ", колір='" + color + '\''

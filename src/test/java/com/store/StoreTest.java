@@ -3,8 +3,10 @@ package com.store;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -80,6 +82,26 @@ class StoreTest {
 
         assertEquals(1, results.size());
         assertTrue(results.get(0) instanceof Dresses);
+    }
+
+    @Test
+    void shouldFindClothesByUuid() {
+        Store store = new Store();
+        Clothes hat = new BasicClothes("Шапка", ClothesSize.S, "Чорний", "Вовна", 399.0);
+        store.addNewClothes(hat, 4);
+
+        Clothes result = store.findByUuid(hat.getUuid());
+
+        assertEquals(hat, result);
+    }
+
+    @Test
+    void shouldReturnNullWhenUuidDoesNotExist() {
+        Store store = createSampleStore();
+
+        Clothes result = store.findByUuid(UUID.randomUUID());
+
+        assertNull(result);
     }
 
     private Store createSampleStore() {

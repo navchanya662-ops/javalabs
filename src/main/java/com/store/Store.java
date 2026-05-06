@@ -1,6 +1,7 @@
 package com.store;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * Клас-контейнер, який зберігає товари магазину та їх кількість.
@@ -151,6 +152,26 @@ public class Store {
         }
 
         return results;
+    }
+
+    /**
+     * Повертає товар із заданим UUID.
+     *
+     * @param uuid унікальний ідентифікатор товару
+     * @return знайдений товар або null, якщо товар не знайдено
+     */
+    public Clothes findByUuid(UUID uuid) {
+        if (uuid == null) {
+            return null;
+        }
+
+        for (Clothes item : clothes) {
+            if (item.getUuid().equals(uuid)) {
+                return item;
+            }
+        }
+
+        return null;
     }
 
     /**

@@ -10,6 +10,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * Відповідає за зчитування та збереження елементів одягу у JSON-файлі.
@@ -145,7 +146,7 @@ public class ClothesFileManager {
         String type = requireText(record.type, "type").toUpperCase();
         ClothesSize size = parseSize(record.size);
 
-        return switch (type) {
+        Clothes item = switch (type) {
             case "CLOTHES" -> new BasicClothes(
                     requireText(record.name, "name"),
                     size,
@@ -189,6 +190,9 @@ public class ClothesFileManager {
             );
             default -> throw new IllegalArgumentException("невідомий тип об'єкта: " + type);
         };
+
+        restoreUuid(item, record.uuid);
+        return item;
     }
 
     /**
@@ -199,6 +203,7 @@ public class ClothesFileManager {
      */
     private ClothesRecord createRecord(Clothes item, int quantity) {
         ClothesRecord record = new ClothesRecord();
+        record.uuid = item.getUuid().toString();
         record.name = item.getName();
         record.size = item.getSize().name();
         record.color = item.getColor();
@@ -225,6 +230,23 @@ public class ClothesFileManager {
         }
 
         return record;
+    }
+
+    /**
+     * Відновлює UUID зі збереженого запису, якщо він існує та має коректний формат.
+     *
+     * @param item елемент одягу
+     * @param value текстове значення UUID
+     */
+    private void restoreUuid(Clothes item, String value) {
+        if (value == null || value.trim().isEmpty()) {
+            return;
+        }
+
+        try {
+            item.setUuid(UUID.fromString(value.trim()));
+        } catch (IllegalArgumentException ignored) {
+        }
     }
 
     /**
@@ -276,6 +298,7 @@ public class ClothesFileManager {
      */
     private static class ClothesRecord {
         private String type;
+        private String uuid;
         private String name;
         private String size;
         private String color;

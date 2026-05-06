@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -94,5 +95,35 @@ class ClothesFileManagerTest {
         assertEquals(4, loaded.getQuantity(0));
         assertEquals(2, loaded.getQuantity(1));
         assertTrue(loaded.getClothes().get(1) instanceof Pants);
+    }
+
+    @Test
+    void shouldSaveAndRestoreUuidAsJson() {
+        Path file = tempDir.resolve("input.json");
+        ArrayList<Clothes> original = new ArrayList<>();
+        Clothes hat = new BasicClothes("Шапка", ClothesSize.S, "Чорний", "Вовна", 399.0);
+        original.add(hat);
+
+        ClothesFileManager fileManager = new ClothesFileManager();
+        fileManager.saveToFile(original, file.toString());
+        ArrayList<Clothes> loaded = fileManager.loadFromFile(file.toString());
+
+        assertEquals(hat.getUuid(), loaded.get(0).getUuid());
+    }
+
+    @Test
+    void shouldGenerateNewUuidWhenJsonUuidIsInvalid() throws IOException {
+        Path file = tempDir.resolve("input.json");
+        Files.writeString(file, """
+                [
+                  {"type":"CLOTHES","uuid":"bad-uuid","name":"Шапка","size":"S","color":"Чорний","material":"Вовна","price":399.0}
+                ]
+                """);
+
+        ClothesFileManager fileManager = new ClothesFileManager();
+        ArrayList<Clothes> loaded = fileManager.loadFromFile(file.toString());
+
+        assertEquals(1, loaded.size());
+        UUID.fromString(loaded.get(0).getUuid().toString());
     }
 }
