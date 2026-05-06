@@ -119,6 +119,10 @@ public class MainApp extends Application {
 
         Button addButton = new Button("Додати");
         addButton.setOnAction(event -> addClothes());
+        Button updateButton = new Button("Оновити вибраний");
+        updateButton.setOnAction(event -> updateSelectedClothes());
+        Button deleteButton = new Button("Видалити вибраний");
+        deleteButton.setOnAction(event -> deleteSelectedClothes());
 
         GridPane form = new GridPane();
         form.setHgap(8);
@@ -147,7 +151,7 @@ public class MainApp extends Application {
         form.add(new Label("Тип довжини:"), 2, 5);
         form.add(lengthTypeField, 3, 5);
         form.add(formalCheckBox, 2, 6);
-        form.add(new VBox(8, addButton, messageLabel), 1, 7);
+        form.add(new VBox(8, addButton, updateButton, deleteButton, messageLabel), 1, 7);
 
         updateAdditionalFieldsState();
 
@@ -207,6 +211,64 @@ public class MainApp extends Application {
     }
 
     /**
+     * Оновлює вибраний у списку елемент одягу на основі даних із форми.
+     */
+    private void updateSelectedClothes() {
+        int index = clothesListView.getSelectionModel().getSelectedIndex();
+        if (index < 0 || index >= store.getClothes().size()) {
+            messageLabel.setText("Спочатку оберіть об'єкт у списку.");
+            return;
+        }
+
+        try {
+            Clothes existingObject = store.getClothes().get(index);
+            String name = nameField.getText().trim();
+            ClothesSize size = sizeComboBox.getValue();
+            String color = colorField.getText().trim();
+            String material = materialField.getText().trim();
+            double price = Double.parseDouble(priceField.getText().trim().replace(',', '.'));
+
+            Clothes updatedObject = createClothesBySelectedType(name, size, color, material, price);
+            updatedObject.setUuid(existingObject.getUuid());
+            if (store.update(existingObject, updatedObject)) {
+                updateClothesList();
+                clothesListView.getSelectionModel().select(index);
+                searchResultArea.setText(updatedObject.toString());
+                messageLabel.setText("Об'єкт успішно оновлено.");
+            } else {
+                messageLabel.setText("Об'єкт не знайдено.");
+            }
+        } catch (NumberFormatException exception) {
+            messageLabel.setText("Ціна має бути числовою.");
+        } catch (IllegalArgumentException exception) {
+            messageLabel.setText("Помилка: " + exception.getMessage());
+        }
+    }
+
+    /**
+     * Видаляє вибраний у списку елемент одягу через Store.
+     */
+    private void deleteSelectedClothes() {
+        int index = clothesListView.getSelectionModel().getSelectedIndex();
+        if (index < 0 || index >= store.getClothes().size()) {
+            messageLabel.setText("Спочатку оберіть об'єкт у списку.");
+            return;
+        }
+
+        Clothes existingObject = store.getClothes().get(index);
+        if (store.delete(existingObject)) {
+            updateClothesList();
+            clearForm();
+            selectedUuidField.clear();
+            uuidSearchField.clear();
+            searchResultArea.clear();
+            messageLabel.setText("Об'єкт успішно видалено.");
+        } else {
+            messageLabel.setText("Об'єкт не знайдено.");
+        }
+    }
+
+    /**
      * Очищає поля форми після успішного додавання.
      */
     private void clearForm() {
@@ -222,6 +284,51 @@ public class MainApp extends Application {
         insulationTypeField.clear();
         lengthTypeField.clear();
         formalCheckBox.setSelected(false);
+    }
+
+    /**
+     * Заповнює форму даними вибраного елемента одягу.
+     *
+     * @param item елемент одягу
+     * @param quantity кількість товару
+     */
+    private void fillForm(Clothes item, int quantity) {
+        typeComboBox.setValue(getTypeLabel(item));
+        nameField.setText(item.getName());
+        sizeComboBox.setValue(item.getSize());
+        colorField.setText(item.getColor());
+        materialField.setText(item.getMaterial());
+        priceField.setText(Double.toString(item.getPrice()));
+        quantityField.setText(Integer.toString(quantity));
+        hasPocketsCheckBox.setSelected(item instanceof Pants pants && pants.hasPockets());
+        sleeveTypeField.setText(item instanceof Shirts shirts ? shirts.getSleeveType() : "");
+        hasHoodCheckBox.setSelected(item instanceof Jackets jackets && jackets.hasHood());
+        insulationTypeField.setText(item instanceof Jackets jackets ? jackets.getInsulationType() : "");
+        lengthTypeField.setText(item instanceof Dresses dresses ? dresses.getLengthType() : "");
+        formalCheckBox.setSelected(item instanceof Dresses dresses && dresses.isFormal());
+        updateAdditionalFieldsState();
+    }
+
+    /**
+     * Повертає назву типу для ComboBox на основі конкретного класу об'єкта.
+     *
+     * @param item елемент одягу
+     * @return назва типу для GUI
+     */
+    private String getTypeLabel(Clothes item) {
+        if (item instanceof Pants) {
+            return "Штани";
+        }
+        if (item instanceof Shirts) {
+            return "Сорочка";
+        }
+        if (item instanceof Jackets) {
+            return "Куртка";
+        }
+        if (item instanceof Dresses) {
+            return "Сукня";
+        }
+        return "Звичайний одяг";
     }
 
     /**
@@ -300,9 +407,11 @@ public class MainApp extends Application {
             selectedUuidField.clear();
             return;
         }
+        Clothes item = store.getClothes().get(index);
         String uuid = store.getClothes().get(index).getUuid().toString();
         selectedUuidField.setText(uuid);
         uuidSearchField.setText(uuid);
+        fillForm(item, store.getQuantity(index));
     }
 
     /**
