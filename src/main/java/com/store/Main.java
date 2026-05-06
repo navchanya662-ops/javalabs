@@ -35,15 +35,17 @@ public class Main {
             switch (choice) {
                 case 1 -> searchObject(scanner, store);
                 case 2 -> createObject(scanner, store);
-                case 3 -> printClothes(store);
-                case 4 -> printSortedClothes(scanner, store);
-                case 5 -> {
+                case 3 -> System.out.println("Модифікацію об'єкта буде реалізовано в наступному кроці.");
+                case 4 -> System.out.println("Видалення об'єкта буде реалізовано в наступному кроці.");
+                case 5 -> printClothes(store);
+                case 6 -> printSortedClothes(scanner, store);
+                case 7 -> {
                     fileManager.saveStoreToFile(store, FILE_NAME);
                     System.out.println("Дані збережено у файл " + FILE_NAME + ".");
                     System.out.println("Роботу програми завершено.");
                     return;
                 }
-                default -> System.out.println("Оберіть пункт меню від 1 до 5.");
+                default -> System.out.println("Оберіть пункт меню від 1 до 7.");
             }
         }
     }
@@ -55,9 +57,11 @@ public class Main {
         System.out.println("\nМеню:");
         System.out.println("1. Пошук об'єкта");
         System.out.println("2. Створити новий об'єкт");
-        System.out.println("3. Вивести інформацію про всі об'єкти");
-        System.out.println("4. Вивести відсортовану інформацію про всі об'єкти");
-        System.out.println("5. Завершити роботу програми");
+        System.out.println("3. Модифікувати об'єкт");
+        System.out.println("4. Видалити об'єкт");
+        System.out.println("5. Вивести інформацію про всі об'єкти");
+        System.out.println("6. Вивести відсортовану інформацію про всі об'єкти");
+        System.out.println("7. Завершити роботу програми");
         System.out.print("Оберіть пункт меню: ");
     }
 
@@ -630,7 +634,7 @@ public class Main {
     }
 
     /**
-     * Зчитує номер пункту меню та перевіряє, що він знаходиться в межах від 1 до 5.
+     * Зчитує номер пункту меню та перевіряє, що він знаходиться в межах від 1 до 7.
      *
      * @param scanner об'єкт для зчитування введення
      * @return коректний номер пункту меню
@@ -640,12 +644,12 @@ public class Main {
             String input = scanner.nextLine().trim();
             try {
                 int value = Integer.parseInt(input);
-                if (value >= 1 && value <= 5) {
+                if (value >= 1 && value <= 7) {
                     return value;
                 }
             } catch (NumberFormatException ignored) {
             }
-            System.out.print("Введіть номер пункту меню від 1 до 5: ");
+            System.out.print("Введіть номер пункту меню від 1 до 7: ");
         }
     }
 
