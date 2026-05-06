@@ -34,8 +34,14 @@ public class Main {
 
             switch (choice) {
                 case 1 -> searchObject(scanner, store);
-                case 2 -> createObject(scanner, store);
-                case 3 -> modifyObject(scanner, store);
+                case 2 -> {
+                    createObject(scanner, store);
+                    fileManager.saveStoreToFile(store, FILE_NAME);
+                }
+                case 3 -> {
+                    modifyObject(scanner, store);
+                    fileManager.saveStoreToFile(store, FILE_NAME);
+                }
                 case 4 -> System.out.println("Видалення об'єкта буде реалізовано в наступному кроці.");
                 case 5 -> printClothes(store);
                 case 6 -> printSortedClothes(scanner, store);

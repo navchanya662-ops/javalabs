@@ -22,7 +22,9 @@ import java.util.UUID;
  * Стартовий клас JavaFX-додатка для роботи з колекцією одягу.
  */
 public class MainApp extends Application {
-    private final Store store = new Store();
+    private static final String FILE_NAME = "input.json";
+    private final ClothesFileManager fileManager = new ClothesFileManager();
+    private Store store;
     private ComboBox<String> typeComboBox;
     private TextField nameField;
     private ComboBox<ClothesSize> sizeComboBox;
@@ -58,6 +60,7 @@ public class MainApp extends Application {
      */
     @Override
     public void start(Stage stage) {
+        store = fileManager.loadStoreFromFile(FILE_NAME);
         Label title = new Label("Магазин одягу");
         title.getStyleClass().add("title");
         GridPane form = createObjectForm();
@@ -86,6 +89,7 @@ public class MainApp extends Application {
         scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
         stage.setTitle("Магазин одягу");
         stage.setScene(scene);
+        updateClothesList();
         stage.show();
     }
 
@@ -200,6 +204,7 @@ public class MainApp extends Application {
 
             Clothes item = createClothesBySelectedType(name, size, color, material, price);
             store.addNewClothes(item, quantity);
+            saveStore();
             clearForm();
             updateClothesList();
             messageLabel.setText("Об'єкт успішно додано.");
@@ -231,6 +236,7 @@ public class MainApp extends Application {
             Clothes updatedObject = createClothesBySelectedType(name, size, color, material, price);
             updatedObject.setUuid(existingObject.getUuid());
             if (store.update(existingObject, updatedObject)) {
+                saveStore();
                 updateClothesList();
                 clothesListView.getSelectionModel().select(index);
                 searchResultArea.setText(updatedObject.toString());
@@ -257,6 +263,7 @@ public class MainApp extends Application {
 
         Clothes existingObject = store.getClothes().get(index);
         if (store.delete(existingObject)) {
+            saveStore();
             updateClothesList();
             clearForm();
             selectedUuidField.clear();
@@ -395,6 +402,13 @@ public class MainApp extends Application {
         for (Clothes item : store.getClothes()) {
             clothesListView.getItems().add(item.getName() + " | UUID: " + item.getUuid());
         }
+    }
+
+    /**
+     * Зберігає поточний стан магазину у JSON-файл.
+     */
+    private void saveStore() {
+        fileManager.saveStoreToFile(store, FILE_NAME);
     }
 
     /**
