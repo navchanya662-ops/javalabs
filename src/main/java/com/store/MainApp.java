@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -23,6 +24,7 @@ public class MainApp extends Application {
     private TextField priceField;
     private TextField quantityField;
     private Label messageLabel;
+    private ListView<String> clothesListView;
 
     /**
      * Запускає JavaFX-додаток.
@@ -42,11 +44,13 @@ public class MainApp extends Application {
     public void start(Stage stage) {
         Label title = new Label("Магазин одягу");
         GridPane form = createObjectForm();
+        clothesListView = new ListView<>();
         BorderPane root = new BorderPane();
         root.setTop(title);
         root.setCenter(form);
+        root.setRight(clothesListView);
 
-        Scene scene = new Scene(root, 600, 400);
+        Scene scene = new Scene(root, 800, 400);
         stage.setTitle("Магазин одягу");
         stage.setScene(scene);
         stage.show();
@@ -105,6 +109,7 @@ public class MainApp extends Application {
 
             store.addNewClothes(new BasicClothes(name, size, color, material, price), quantity);
             clearForm();
+            updateClothesList();
             messageLabel.setText("Об'єкт успішно додано.");
         } catch (NumberFormatException exception) {
             messageLabel.setText("Ціна і кількість мають бути числовими.");
@@ -123,5 +128,15 @@ public class MainApp extends Application {
         materialField.clear();
         priceField.clear();
         quantityField.clear();
+    }
+
+    /**
+     * Оновлює короткий список елементів одягу у форматі назва та UUID.
+     */
+    private void updateClothesList() {
+        clothesListView.getItems().clear();
+        for (Clothes item : store.getClothes()) {
+            clothesListView.getItems().add(item.getName() + " | UUID: " + item.getUuid());
+        }
     }
 }
