@@ -3,11 +3,14 @@ package com.store;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -20,14 +23,22 @@ import java.util.UUID;
  */
 public class MainApp extends Application {
     private final Store store = new Store();
+    private ComboBox<String> typeComboBox;
     private TextField nameField;
     private ComboBox<ClothesSize> sizeComboBox;
     private TextField colorField;
     private TextField materialField;
     private TextField priceField;
     private TextField quantityField;
+    private CheckBox hasPocketsCheckBox;
+    private TextField sleeveTypeField;
+    private CheckBox hasHoodCheckBox;
+    private TextField insulationTypeField;
+    private TextField lengthTypeField;
+    private CheckBox formalCheckBox;
     private Label messageLabel;
     private ListView<String> clothesListView;
+    private TextField selectedUuidField;
     private TextField uuidSearchField;
     private TextArea searchResultArea;
 
@@ -51,12 +62,23 @@ public class MainApp extends Application {
         GridPane form = createObjectForm();
         VBox searchPanel = createUuidSearchPanel();
         clothesListView = new ListView<>();
+        selectedUuidField = new TextField();
+        selectedUuidField.setEditable(false);
+        selectedUuidField.setPromptText("Оберіть об'єкт у списку");
+        clothesListView.getSelectionModel().selectedIndexProperty().addListener(
+                (observable, oldValue, newValue) -> showSelectedUuid(newValue.intValue())
+        );
+
+        Button copyUuidButton = new Button("Скопіювати UUID");
+        copyUuidButton.setOnAction(event -> copySelectedUuid());
+        VBox listPanel = new VBox(8, new Label("Об'єкти"), clothesListView, selectedUuidField, copyUuidButton);
+
         BorderPane root = new BorderPane();
         root.setTop(title);
         root.setCenter(new VBox(16, form, searchPanel));
-        root.setRight(clothesListView);
+        root.setRight(listPanel);
 
-        Scene scene = new Scene(root, 900, 500);
+        Scene scene = new Scene(root, 1050, 620);
         stage.setTitle("Магазин одягу");
         stage.setScene(scene);
         stage.show();
@@ -68,6 +90,11 @@ public class MainApp extends Application {
      * @return форма додавання одягу
      */
     private GridPane createObjectForm() {
+        typeComboBox = new ComboBox<>();
+        typeComboBox.getItems().addAll("Звичайний одяг", "Штани", "Сорочка", "Куртка", "Сукня");
+        typeComboBox.setValue("Звичайний одяг");
+        typeComboBox.setOnAction(event -> updateAdditionalFieldsState());
+
         nameField = new TextField();
         sizeComboBox = new ComboBox<>();
         sizeComboBox.getItems().addAll(ClothesSize.values());
@@ -76,27 +103,46 @@ public class MainApp extends Application {
         materialField = new TextField();
         priceField = new TextField();
         quantityField = new TextField();
+        hasPocketsCheckBox = new CheckBox("Є кишені");
+        sleeveTypeField = new TextField();
+        hasHoodCheckBox = new CheckBox("Є капюшон");
+        insulationTypeField = new TextField();
+        lengthTypeField = new TextField();
+        formalCheckBox = new CheckBox("Офіційна");
         messageLabel = new Label();
 
         Button addButton = new Button("Додати");
-        addButton.setOnAction(event -> addBasicClothes());
+        addButton.setOnAction(event -> addClothes());
 
         GridPane form = new GridPane();
         form.setHgap(8);
         form.setVgap(8);
-        form.add(new Label("Назва:"), 0, 0);
-        form.add(nameField, 1, 0);
-        form.add(new Label("Розмір:"), 0, 1);
-        form.add(sizeComboBox, 1, 1);
-        form.add(new Label("Колір:"), 0, 2);
-        form.add(colorField, 1, 2);
-        form.add(new Label("Матеріал:"), 0, 3);
-        form.add(materialField, 1, 3);
-        form.add(new Label("Ціна:"), 0, 4);
-        form.add(priceField, 1, 4);
-        form.add(new Label("Кількість:"), 0, 5);
-        form.add(quantityField, 1, 5);
-        form.add(new VBox(8, addButton, messageLabel), 1, 6);
+        form.add(new Label("Тип:"), 0, 0);
+        form.add(typeComboBox, 1, 0);
+        form.add(new Label("Назва:"), 0, 1);
+        form.add(nameField, 1, 1);
+        form.add(new Label("Розмір:"), 0, 2);
+        form.add(sizeComboBox, 1, 2);
+        form.add(new Label("Колір:"), 0, 3);
+        form.add(colorField, 1, 3);
+        form.add(new Label("Матеріал:"), 0, 4);
+        form.add(materialField, 1, 4);
+        form.add(new Label("Ціна:"), 0, 5);
+        form.add(priceField, 1, 5);
+        form.add(new Label("Кількість:"), 0, 6);
+        form.add(quantityField, 1, 6);
+        form.add(hasPocketsCheckBox, 2, 1);
+        form.add(new Label("Тип рукава:"), 2, 2);
+        form.add(sleeveTypeField, 3, 2);
+        form.add(hasHoodCheckBox, 2, 3);
+        form.add(new Label("Тип утеплення:"), 2, 4);
+        form.add(insulationTypeField, 3, 4);
+        form.add(new Label("Тип довжини:"), 2, 5);
+        form.add(lengthTypeField, 3, 5);
+        form.add(formalCheckBox, 2, 6);
+        form.add(new VBox(8, addButton, messageLabel), 1, 7);
+
+        updateAdditionalFieldsState();
 
         return form;
     }
@@ -126,9 +172,9 @@ public class MainApp extends Application {
     }
 
     /**
-     * Додає базовий елемент одягу в магазин на основі даних із форми.
+     * Додає елемент одягу вибраного типу в магазин на основі даних із форми.
      */
-    private void addBasicClothes() {
+    private void addClothes() {
         try {
             String name = nameField.getText().trim();
             ClothesSize size = sizeComboBox.getValue();
@@ -137,7 +183,8 @@ public class MainApp extends Application {
             double price = Double.parseDouble(priceField.getText().trim().replace(',', '.'));
             int quantity = Integer.parseInt(quantityField.getText().trim());
 
-            store.addNewClothes(new BasicClothes(name, size, color, material, price), quantity);
+            Clothes item = createClothesBySelectedType(name, size, color, material, price);
+            store.addNewClothes(item, quantity);
             clearForm();
             updateClothesList();
             messageLabel.setText("Об'єкт успішно додано.");
@@ -158,6 +205,68 @@ public class MainApp extends Application {
         materialField.clear();
         priceField.clear();
         quantityField.clear();
+        hasPocketsCheckBox.setSelected(false);
+        sleeveTypeField.clear();
+        hasHoodCheckBox.setSelected(false);
+        insulationTypeField.clear();
+        lengthTypeField.clear();
+        formalCheckBox.setSelected(false);
+    }
+
+    /**
+     * Створює об'єкт одягу відповідно до вибраного типу.
+     *
+     * @param name назва
+     * @param size розмір
+     * @param color колір
+     * @param material матеріал
+     * @param price ціна
+     * @return створений об'єкт одягу
+     */
+    private Clothes createClothesBySelectedType(
+            String name,
+            ClothesSize size,
+            String color,
+            String material,
+            double price
+    ) {
+        String type = typeComboBox.getValue();
+        return switch (type) {
+            case "Штани" -> new Pants(name, size, color, material, price, hasPocketsCheckBox.isSelected());
+            case "Сорочка" -> new Shirts(name, size, color, material, price, sleeveTypeField.getText().trim());
+            case "Куртка" -> new Jackets(
+                    name,
+                    size,
+                    color,
+                    material,
+                    price,
+                    hasHoodCheckBox.isSelected(),
+                    insulationTypeField.getText().trim()
+            );
+            case "Сукня" -> new Dresses(
+                    name,
+                    size,
+                    color,
+                    material,
+                    price,
+                    lengthTypeField.getText().trim(),
+                    formalCheckBox.isSelected()
+            );
+            default -> new BasicClothes(name, size, color, material, price);
+        };
+    }
+
+    /**
+     * Активує тільки ті додаткові поля, які потрібні для вибраного типу одягу.
+     */
+    private void updateAdditionalFieldsState() {
+        String type = typeComboBox.getValue();
+        hasPocketsCheckBox.setDisable(!"Штани".equals(type));
+        sleeveTypeField.setDisable(!"Сорочка".equals(type));
+        hasHoodCheckBox.setDisable(!"Куртка".equals(type));
+        insulationTypeField.setDisable(!"Куртка".equals(type));
+        lengthTypeField.setDisable(!"Сукня".equals(type));
+        formalCheckBox.setDisable(!"Сукня".equals(type));
     }
 
     /**
@@ -168,6 +277,37 @@ public class MainApp extends Application {
         for (Clothes item : store.getClothes()) {
             clothesListView.getItems().add(item.getName() + " | UUID: " + item.getUuid());
         }
+    }
+
+    /**
+     * Показує UUID вибраного у списку об'єкта в окремому полі для копіювання.
+     *
+     * @param index індекс вибраного об'єкта
+     */
+    private void showSelectedUuid(int index) {
+        if (index < 0 || index >= store.getClothes().size()) {
+            selectedUuidField.clear();
+            return;
+        }
+        String uuid = store.getClothes().get(index).getUuid().toString();
+        selectedUuidField.setText(uuid);
+        uuidSearchField.setText(uuid);
+    }
+
+    /**
+     * Копіює UUID вибраного об'єкта в буфер обміну.
+     */
+    private void copySelectedUuid() {
+        String uuid = selectedUuidField.getText().trim();
+        if (uuid.isEmpty()) {
+            messageLabel.setText("Спочатку оберіть об'єкт у списку.");
+            return;
+        }
+
+        ClipboardContent content = new ClipboardContent();
+        content.putString(uuid);
+        Clipboard.getSystemClipboard().setContent(content);
+        messageLabel.setText("UUID скопійовано.");
     }
 
     /**
