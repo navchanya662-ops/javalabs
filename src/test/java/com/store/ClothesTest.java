@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -19,6 +21,22 @@ class ClothesTest {
         assertTrue(clothes instanceof BasicClothes);
         assertTrue(clothes instanceof Clothes);
         assertTrue(clothes.toString().contains("Футболка"));
+    }
+
+    @Test
+    void shouldAssignUuidWhenClothesIsCreated() {
+        Clothes clothes = new BasicClothes("Футболка", ClothesSize.M, "Білий", "Бавовна", 499.99);
+
+        assertNotNull(clothes.getUuid());
+        assertTrue(clothes instanceof Identifiable);
+    }
+
+    @Test
+    void shouldAssignDifferentUuidForDifferentClothes() {
+        Clothes first = new BasicClothes("Футболка", ClothesSize.M, "Білий", "Бавовна", 499.99);
+        Clothes second = new BasicClothes("Шапка", ClothesSize.S, "Чорний", "Вовна", 399.0);
+
+        assertNotEquals(first.getUuid(), second.getUuid());
     }
 
     @Test
@@ -90,6 +108,14 @@ class ClothesTest {
 
         assertEquals(original, copy);
         assertNotSame(original, copy);
+    }
+
+    @Test
+    void shouldAssignNewUuidWhenCopyConstructorUsed() {
+        Clothes original = new BasicClothes("Футболка", ClothesSize.M, "Білий", "Бавовна", 499.99);
+        Clothes copy = new BasicClothes(original);
+
+        assertNotEquals(original.getUuid(), copy.getUuid());
     }
 
     @Test
