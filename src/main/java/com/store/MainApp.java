@@ -59,6 +59,7 @@ public class MainApp extends Application {
     @Override
     public void start(Stage stage) {
         Label title = new Label("Магазин одягу");
+        title.getStyleClass().add("title");
         GridPane form = createObjectForm();
         VBox searchPanel = createUuidSearchPanel();
         clothesListView = new ListView<>();
@@ -71,7 +72,10 @@ public class MainApp extends Application {
 
         Button copyUuidButton = new Button("Скопіювати UUID");
         copyUuidButton.setOnAction(event -> copySelectedUuid());
-        VBox listPanel = new VBox(8, new Label("Об'єкти"), clothesListView, selectedUuidField, copyUuidButton);
+        Label listTitle = new Label("Об'єкти");
+        listTitle.getStyleClass().add("section-title");
+        VBox listPanel = new VBox(8, listTitle, clothesListView, selectedUuidField, copyUuidButton);
+        listPanel.getStyleClass().add("panel");
 
         BorderPane root = new BorderPane();
         root.setTop(title);
@@ -79,6 +83,7 @@ public class MainApp extends Application {
         root.setRight(listPanel);
 
         Scene scene = new Scene(root, 1050, 620);
+        scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
         stage.setTitle("Магазин одягу");
         stage.setScene(scene);
         stage.show();
@@ -110,6 +115,7 @@ public class MainApp extends Application {
         lengthTypeField = new TextField();
         formalCheckBox = new CheckBox("Офіційна");
         messageLabel = new Label();
+        messageLabel.getStyleClass().add("message");
 
         Button addButton = new Button("Додати");
         addButton.setOnAction(event -> addClothes());
@@ -117,6 +123,7 @@ public class MainApp extends Application {
         GridPane form = new GridPane();
         form.setHgap(8);
         form.setVgap(8);
+        form.getStyleClass().add("panel");
         form.add(new Label("Тип:"), 0, 0);
         form.add(typeComboBox, 1, 0);
         form.add(new Label("Назва:"), 0, 1);
@@ -168,7 +175,11 @@ public class MainApp extends Application {
         searchForm.add(uuidSearchField, 1, 0);
         searchForm.add(searchButton, 2, 0);
 
-        return new VBox(8, new Label("Пошук за UUID"), searchForm, searchResultArea);
+        Label searchTitle = new Label("Пошук за UUID");
+        searchTitle.getStyleClass().add("section-title");
+        VBox panel = new VBox(8, searchTitle, searchForm, searchResultArea);
+        panel.getStyleClass().add("panel");
+        return panel;
     }
 
     /**
