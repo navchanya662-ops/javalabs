@@ -44,6 +44,50 @@ public class Store {
     }
 
     /**
+     * Оновлює існуючий товар у магазині, залишаючи його кількість без змін.
+     *
+     * @param existingObject товар, який потрібно знайти
+     * @param newObject нові дані товару
+     * @return true, якщо товар знайдено та оновлено
+     */
+    public boolean update(Clothes existingObject, Clothes newObject) {
+        if (existingObject == null || newObject == null) {
+            return false;
+        }
+
+        for (int i = 0; i < clothes.size(); i++) {
+            if (clothes.get(i).equals(existingObject)) {
+                clothes.set(i, newObject);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Видаляє товар із магазину разом із відповідним записом кількості.
+     *
+     * @param existingObject товар, який потрібно видалити
+     * @return true, якщо товар знайдено та видалено
+     */
+    public boolean delete(Clothes existingObject) {
+        if (existingObject == null) {
+            return false;
+        }
+
+        for (int i = 0; i < clothes.size(); i++) {
+            if (clothes.get(i).equals(existingObject)) {
+                clothes.remove(i);
+                quantities.remove(i);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Повертає список товарів магазину.
      *
      * @return список товарів
