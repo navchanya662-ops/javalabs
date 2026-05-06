@@ -35,7 +35,7 @@ public class Main {
             switch (choice) {
                 case 1 -> searchObject(scanner, store);
                 case 2 -> createObject(scanner, store);
-                case 3 -> System.out.println("Модифікацію об'єкта буде реалізовано в наступному кроці.");
+                case 3 -> modifyObject(scanner, store);
                 case 4 -> System.out.println("Видалення об'єкта буде реалізовано в наступному кроці.");
                 case 5 -> printClothes(store);
                 case 6 -> printSortedClothes(scanner, store);
@@ -101,6 +101,20 @@ public class Main {
         System.out.println("1. Сортувати за назвою");
         System.out.println("2. Сортувати за ціною");
         System.out.println("3. Сортувати за розміром");
+        System.out.println("0. Повернутися до головного меню");
+        System.out.print("Ваш вибір: ");
+    }
+
+    /**
+     * Виводить підменю вибору атрибута для модифікації.
+     */
+    private static void printUpdateAttributeMenu() {
+        System.out.println("\nОберіть атрибут для зміни:");
+        System.out.println("1. Назва");
+        System.out.println("2. Розмір");
+        System.out.println("3. Колір");
+        System.out.println("4. Матеріал");
+        System.out.println("5. Ціна");
         System.out.println("0. Повернутися до головного меню");
         System.out.print("Ваш вибір: ");
     }
@@ -523,6 +537,136 @@ public class Main {
     }
 
     /**
+     * Модифікує один зі спільних атрибутів вибраного елемента одягу.
+     *
+     * @param scanner об'єкт для зчитування введення
+     * @param store магазин з товарами
+     */
+    private static void modifyObject(Scanner scanner, Store store) {
+        if (store.isEmpty()) {
+            System.out.println("Список елементів одягу порожній.");
+            return;
+        }
+
+        printClothes(store);
+        System.out.print("Введіть номер об'єкта для модифікації: ");
+        int index = readObjectIndex(scanner, store.getTotalUniqueItems());
+        Clothes existingObject = store.getClothes().get(index);
+
+        printUpdateAttributeMenu();
+        int choice = readUpdateAttributeChoice(scanner);
+        if (choice == 0) {
+            System.out.println("Повернення до головного меню.");
+            return;
+        }
+
+        try {
+            Clothes updatedObject = createUpdatedObject(scanner, existingObject, choice);
+            if (store.update(existingObject, updatedObject)) {
+                System.out.println("Об'єкт успішно модифіковано.");
+            } else {
+                System.out.println("Об'єкт не знайдено.");
+            }
+        } catch (IllegalArgumentException exception) {
+            System.out.println("Помилка модифікації об'єкта: " + exception.getMessage());
+        }
+    }
+
+    /**
+     * Створює оновлену копію об'єкта зі зміненим спільним атрибутом.
+     *
+     * @param scanner об'єкт для зчитування введення
+     * @param item початковий елемент одягу
+     * @param choice номер атрибута для зміни
+     * @return оновлений елемент одягу того самого типу
+     */
+    private static Clothes createUpdatedObject(Scanner scanner, Clothes item, int choice) {
+        String name = item.getName();
+        ClothesSize size = item.getSize();
+        String color = item.getColor();
+        String material = item.getMaterial();
+        double price = item.getPrice();
+
+        switch (choice) {
+            case 1 -> {
+                System.out.print("Нова назва: ");
+                name = readNonBlankLine(scanner);
+            }
+            case 2 -> {
+                System.out.print("Новий розмір (" + getAvailableSizes() + "): ");
+                size = readClothesSize(scanner);
+            }
+            case 3 -> {
+                System.out.print("Новий колір: ");
+                color = readNonBlankLine(scanner);
+            }
+            case 4 -> {
+                System.out.print("Новий матеріал: ");
+                material = readNonBlankLine(scanner);
+            }
+            case 5 -> {
+                System.out.print("Нова ціна: ");
+                price = readNonNegativeDouble(scanner);
+            }
+            default -> throw new IllegalArgumentException("Невідомий атрибут для модифікації");
+        }
+
+        Clothes updatedObject = recreateClothesWithCommonFields(item, name, size, color, material, price);
+        updatedObject.setUuid(item.getUuid());
+        return updatedObject;
+    }
+
+    /**
+     * Відтворює об'єкт того самого типу з оновленими спільними полями.
+     *
+     * @param item початковий елемент одягу
+     * @param name назва
+     * @param size розмір
+     * @param color колір
+     * @param material матеріал
+     * @param price ціна
+     * @return новий об'єкт того самого типу
+     */
+    private static Clothes recreateClothesWithCommonFields(
+            Clothes item,
+            String name,
+            ClothesSize size,
+            String color,
+            String material,
+            double price
+    ) {
+        if (item instanceof Pants pants) {
+            return new Pants(name, size, color, material, price, pants.hasPockets());
+        }
+        if (item instanceof Shirts shirts) {
+            return new Shirts(name, size, color, material, price, shirts.getSleeveType());
+        }
+        if (item instanceof Jackets jackets) {
+            return new Jackets(
+                    name,
+                    size,
+                    color,
+                    material,
+                    price,
+                    jackets.hasHood(),
+                    jackets.getInsulationType()
+            );
+        }
+        if (item instanceof Dresses dresses) {
+            return new Dresses(
+                    name,
+                    size,
+                    color,
+                    material,
+                    price,
+                    dresses.getLengthType(),
+                    dresses.isFormal()
+            );
+        }
+        return new BasicClothes(name, size, color, material, price);
+    }
+
+    /**
      * Виводить усі створені елементи одягу.
      *
      * @param store магазин з товарами
@@ -670,6 +814,26 @@ public class Main {
             } catch (NumberFormatException ignored) {
             }
             System.out.print("Введіть номер пункту підменю від 0 до 5: ");
+        }
+    }
+
+    /**
+     * Зчитує номер атрибута для модифікації об'єкта.
+     *
+     * @param scanner об'єкт для зчитування введення
+     * @return коректний номер атрибута
+     */
+    private static int readUpdateAttributeChoice(Scanner scanner) {
+        while (true) {
+            String input = scanner.nextLine().trim();
+            try {
+                int value = Integer.parseInt(input);
+                if (value >= 0 && value <= 5) {
+                    return value;
+                }
+            } catch (NumberFormatException ignored) {
+            }
+            System.out.print("Введіть номер атрибута від 0 до 5: ");
         }
     }
 
