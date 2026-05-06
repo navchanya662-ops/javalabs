@@ -98,6 +98,21 @@ class ClothesFileManagerTest {
     }
 
     @Test
+    void shouldSaveAndRestoreStoreUuidAsJson() {
+        Path file = tempDir.resolve("input.json");
+        Store original = new Store();
+        Clothes hat = new BasicClothes("Шапка", ClothesSize.S, "Чорний", "Вовна", 399.0);
+        original.addNewClothes(hat, 4);
+
+        ClothesFileManager fileManager = new ClothesFileManager();
+        fileManager.saveStoreToFile(original, file.toString());
+        Store loaded = fileManager.loadStoreFromFile(file.toString());
+
+        assertEquals(hat.getUuid(), loaded.getClothes().get(0).getUuid());
+        assertEquals(4, loaded.getQuantity(0));
+    }
+
+    @Test
     void shouldSaveAndRestoreUuidAsJson() {
         Path file = tempDir.resolve("input.json");
         ArrayList<Clothes> original = new ArrayList<>();
