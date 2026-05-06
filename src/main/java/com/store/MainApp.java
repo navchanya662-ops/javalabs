@@ -6,11 +6,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import java.util.UUID;
 
 /**
  * Стартовий клас JavaFX-додатка для роботи з колекцією одягу.
@@ -25,6 +28,8 @@ public class MainApp extends Application {
     private TextField quantityField;
     private Label messageLabel;
     private ListView<String> clothesListView;
+    private TextField uuidSearchField;
+    private TextArea searchResultArea;
 
     /**
      * Запускає JavaFX-додаток.
@@ -44,13 +49,14 @@ public class MainApp extends Application {
     public void start(Stage stage) {
         Label title = new Label("Магазин одягу");
         GridPane form = createObjectForm();
+        VBox searchPanel = createUuidSearchPanel();
         clothesListView = new ListView<>();
         BorderPane root = new BorderPane();
         root.setTop(title);
-        root.setCenter(form);
+        root.setCenter(new VBox(16, form, searchPanel));
         root.setRight(clothesListView);
 
-        Scene scene = new Scene(root, 800, 400);
+        Scene scene = new Scene(root, 900, 500);
         stage.setTitle("Магазин одягу");
         stage.setScene(scene);
         stage.show();
@@ -96,6 +102,30 @@ public class MainApp extends Application {
     }
 
     /**
+     * Створює панель пошуку елемента одягу за UUID.
+     *
+     * @return панель пошуку за UUID
+     */
+    private VBox createUuidSearchPanel() {
+        uuidSearchField = new TextField();
+        searchResultArea = new TextArea();
+        searchResultArea.setEditable(false);
+        searchResultArea.setWrapText(true);
+
+        Button searchButton = new Button("Знайти");
+        searchButton.setOnAction(event -> searchByUuid());
+
+        GridPane searchForm = new GridPane();
+        searchForm.setHgap(8);
+        searchForm.setVgap(8);
+        searchForm.add(new Label("UUID:"), 0, 0);
+        searchForm.add(uuidSearchField, 1, 0);
+        searchForm.add(searchButton, 2, 0);
+
+        return new VBox(8, new Label("Пошук за UUID"), searchForm, searchResultArea);
+    }
+
+    /**
      * Додає базовий елемент одягу в магазин на основі даних із форми.
      */
     private void addBasicClothes() {
@@ -137,6 +167,29 @@ public class MainApp extends Application {
         clothesListView.getItems().clear();
         for (Clothes item : store.getClothes()) {
             clothesListView.getItems().add(item.getName() + " | UUID: " + item.getUuid());
+        }
+    }
+
+    /**
+     * Шукає елемент одягу за UUID і показує повну інформацію про результат.
+     */
+    private void searchByUuid() {
+        String input = uuidSearchField.getText().trim();
+        if (input.isEmpty()) {
+            searchResultArea.setText("Введіть UUID.");
+            return;
+        }
+
+        try {
+            UUID uuid = UUID.fromString(input);
+            Clothes result = store.findByUuid(uuid);
+            if (result == null) {
+                searchResultArea.setText("Об'єкт не знайдено.");
+                return;
+            }
+            searchResultArea.setText(result.toString());
+        } catch (IllegalArgumentException exception) {
+            searchResultArea.setText("Некоректний формат UUID.");
         }
     }
 }
