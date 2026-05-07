@@ -42,7 +42,7 @@ public class Dresses extends Clothes {
      */
     public void setLengthType(String lengthType) {
         if (lengthType == null || lengthType.trim().isEmpty()) {
-            throw new IllegalArgumentException("Тип довжини не може бути порожнім");
+            throw new InvalidFieldValueException("Тип довжини не може бути порожнім");
         }
         this.lengthType = lengthType;
     }

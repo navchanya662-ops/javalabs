@@ -75,7 +75,7 @@ public abstract class Clothes implements Comparable<Clothes>, Identifiable {
      */
     void setUuid(UUID uuid) {
         if (uuid == null) {
-            throw new IllegalArgumentException("UUID не може бути null");
+            throw new InvalidFieldValueException("UUID не може бути null");
         }
         this.uuid = uuid;
     }
@@ -191,7 +191,7 @@ public abstract class Clothes implements Comparable<Clothes>, Identifiable {
      */
     private static void validateText(String value, String fieldName) {
         if (value == null || value.trim().isEmpty()) {
-            throw new IllegalArgumentException(fieldName + " не може бути порожнім");
+            throw new InvalidFieldValueException(fieldName + " не може бути порожнім");
         }
     }
 
@@ -203,7 +203,7 @@ public abstract class Clothes implements Comparable<Clothes>, Identifiable {
      */
     private static void validateSize(ClothesSize size) {
         if (size == null) {
-            throw new IllegalArgumentException("Розмір не може бути порожнім");
+            throw new InvalidFieldValueException("Розмір не може бути порожнім");
         }
     }
 
@@ -215,7 +215,7 @@ public abstract class Clothes implements Comparable<Clothes>, Identifiable {
      */
     private static void validatePrice(double price) {
         if (price < 0) {
-            throw new IllegalArgumentException("Ціна не може бути від'ємною");
+            throw new InvalidFieldValueException("Ціна не може бути від'ємною");
         }
     }
 
@@ -228,7 +228,7 @@ public abstract class Clothes implements Comparable<Clothes>, Identifiable {
      */
     private static Clothes requireNonNullClothes(Clothes clothes) {
         if (clothes == null) {
-            throw new IllegalArgumentException("Об'єкт для копіювання не може бути null");
+            throw new InvalidFieldValueException("Об'єкт для копіювання не може бути null");
         }
         return clothes;
     }
