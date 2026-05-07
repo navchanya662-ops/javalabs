@@ -1,84 +1,53 @@
 [
   {
     "type": "CLOTHES",
-    "uuid": "c02581e6-732d-48c9-a338-96406f2a2bb0",
     "name": "Шапка",
     "size": "S",
     "color": "Чорний",
     "material": "Вовна",
     "price": 399.0,
-    "quantity": 4,
-    "hasPockets": false,
-    "hasHood": false,
-    "formal": false
+    "quantity": 4
   },
   {
     "type": "PANTS",
-    "uuid": "fae4c202-89b2-426e-9c8b-d9b8f52bf830",
     "name": "Джинси",
     "size": "L",
     "color": "Синій",
     "material": "Денім",
     "price": 1299.0,
     "quantity": 2,
-    "hasPockets": true,
-    "hasHood": false,
-    "formal": false
+    "hasPockets": true
   },
   {
     "type": "SHIRTS",
-    "uuid": "f86917fd-6687-4791-b7bb-e72267245e09",
     "name": "Сорочка",
     "size": "M",
     "color": "Білий",
     "material": "Бавовна",
     "price": 899.0,
     "quantity": 5,
-    "hasPockets": false,
-    "sleeveType": "довгий",
-    "hasHood": false,
-    "formal": false
+    "sleeveType": "довгий"
   },
   {
     "type": "JACKETS",
-    "uuid": "029583f9-fdab-4670-8c55-93da2828a5dd",
     "name": "Куртка",
     "size": "XL",
     "color": "Чорний",
     "material": "Поліестер",
     "price": 2499.0,
     "quantity": 3,
-    "hasPockets": false,
     "hasHood": true,
-    "insulationType": "синтепон",
-    "formal": false
+    "insulationType": "синтепон"
   },
   {
     "type": "DRESSES",
-    "uuid": "468c4057-d8f0-459c-be3f-fd4c3964ad1b",
     "name": "Сукня",
     "size": "M",
     "color": "Червоний",
     "material": "Шовк",
     "price": 1899.0,
     "quantity": 1,
-    "hasPockets": false,
-    "hasHood": false,
     "lengthType": "міді",
     "formal": true
-  },
-  {
-    "type": "SHIRTS",
-    "uuid": "3e9db442-bd5c-4d4a-9a60-178bf385add3",
-    "name": "sad",
-    "size": "M",
-    "color": "das",
-    "material": "dsa",
-    "price": 2.0,
-    "quantity": 121,
-    "hasPockets": false,
-    "sleeveType": "22",
-    "hasHood": false,
-    "formal": false
   }
 ]
