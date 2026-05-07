@@ -44,6 +44,75 @@ public class Store {
     }
 
     /**
+     * Оновлює існуючий товар у магазині, залишаючи його кількість без змін.
+     *
+     * @param existingObject товар, який потрібно знайти
+     * @param newObject нові дані товару
+     * @return true, якщо товар знайдено та оновлено
+     */
+    public boolean update(Clothes existingObject, Clothes newObject) {
+        if (existingObject == null || newObject == null) {
+            return false;
+        }
+
+        for (int i = 0; i < clothes.size(); i++) {
+            if (clothes.get(i).equals(existingObject)) {
+                clothes.set(i, newObject);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Оновлює існуючий товар або кидає виняток, якщо товар не знайдено.
+     *
+     * @param existingObject товар, який потрібно знайти
+     * @param newObject нові дані товару
+     * @throws ObjectNotFoundException якщо товар для оновлення не знайдено
+     */
+    public void updateOrThrow(Clothes existingObject, Clothes newObject) {
+        if (!update(existingObject, newObject)) {
+            throw new ObjectNotFoundException("Об'єкт для оновлення не знайдено");
+        }
+    }
+
+    /**
+     * Видаляє товар із магазину разом із відповідним записом кількості.
+     *
+     * @param existingObject товар, який потрібно видалити
+     * @return true, якщо товар знайдено та видалено
+     */
+    public boolean delete(Clothes existingObject) {
+        if (existingObject == null) {
+            return false;
+        }
+
+        for (int i = 0; i < clothes.size(); i++) {
+            if (clothes.get(i).equals(existingObject)) {
+                clothes.remove(i);
+                quantities.remove(i);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Видаляє товар або кидає виняток, якщо товар не знайдено.
+     *
+     * @param existingObject товар, який потрібно видалити
+     * @throws ObjectNotFoundException якщо товар для видалення не знайдено
+     */
+    public void deleteOrThrow(Clothes existingObject) {
+        if (!delete(existingObject)) {
+            throw new ObjectNotFoundException("Об'єкт для видалення не знайдено");
+        }
+    }
+
+    /**
      * Повертає список товарів магазину.
      *
      * @return список товарів
