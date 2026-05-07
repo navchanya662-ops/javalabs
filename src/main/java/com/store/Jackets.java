@@ -60,7 +60,7 @@ public class Jackets extends Clothes {
      */
     public void setInsulationType(String insulationType) {
         if (insulationType == null || insulationType.trim().isEmpty()) {
-            throw new IllegalArgumentException("Тип утеплення не може бути порожнім");
+            throw new InvalidFieldValueException("Тип утеплення не може бути порожнім");
         }
         this.insulationType = insulationType;
     }
